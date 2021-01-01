@@ -47,7 +47,15 @@ from . import (
 )
 
 def show(place, long=False):
-    """."""
+    """Print stylized place description
+
+    Print long description if long is present or this place has not been visited.
+    Otherwise print short description if it exists. Set place["visited"] to True.
+
+    Args:
+        long (bool, default=False): print the long description
+    """
+
     print()
     info(themes.title(place.get("name", "Unnamed location").title()))
     print()
