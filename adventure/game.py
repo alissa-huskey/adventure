@@ -31,7 +31,7 @@ from .formatting import (
 )
 from .player import (
     is_alive,
-    current_location,
+    current_place,
     current_position,
     get_all_inventory,
     get_inventory,
@@ -46,17 +46,17 @@ from . import (
     themes,
 )
 
-def show(location, long=False):
+def show(place, long=False):
     """."""
     print()
-    info(themes.title(location.get("name", "Unnamed location").title()))
+    info(themes.title(place.get("name", "Unnamed location").title()))
     print()
 
-    items = location.get("items", [])
-    if long or not location.get("visited"):
-        desc = location.get("description")
+    items = place.get("items", [])
+    if long or not place.get("visited"):
+        desc = place.get("description")
     else:
-        desc = location.get("short") or location.get("description")
+        desc = place.get("short") or place.get("description")
 
     if desc:
         if items:
@@ -69,12 +69,12 @@ def show(location, long=False):
         info(mergelines(desc))
         print()
 
-    for letter, desc in location["look"].items():
+    for letter, desc in place["look"].items():
         if not desc: continue
         direction = get_direction(letter)
         info(f"To the {themes.compass(direction)} is {desc}.")
     print()
-    location["visited"] = True
+    place["visited"] = True
 
 def parse(response):
     """Return a tuple containing the (command, args) parsed from response"""
@@ -134,15 +134,15 @@ def parse(response):
     return (func, words)
 
 def goto(pos):
-    """Update the players pos(ition) and location, or return False if no such
+    """Update the players pos(ition) and place, or return False if no such
     position exists."""
-    location = get_place(pos)
-    if not location:
+    place = get_place(pos)
+    if not place:
         return False
 
     current_position(pos)
-    current_location(location)
-    return location
+    current_place(place)
+    return place
 
 def step(pos, direction, times=1):
     """Return a positon modified after going in direction a number of times.
@@ -167,7 +167,7 @@ def do_map(*args):
     for place in PLACES:
         x, y = place.get("position")
         try:
-            debug(f"location: {place['name']!r}, ({x=}, {y=})")
+            debug(f"place: {place['name']!r}, ({x=}, {y=})")
             grid.set(y, x, place.get("name", ""))
         except IndexError:
             error(f"Couldn't map location: {place['name']!r}, ({x=}, {y=})")
@@ -245,21 +245,21 @@ def do_look(direction=None, *args):
             options=["a"]+COMPASS_OPTIONS)
     extra_args("look", args)
 
-    location = current_location()
+    place = current_place()
 
     if not direction:
-        show(location, long=True)
+        show(place, long=True)
         return
 
     if direction.strip().lower() == "around":
-        items = location["items"] or None
+        items = place["items"] or None
         if items:
             info("You see " + ", ".join([str(fx.bold(o)) for o in items]) + ".")
         return
 
     lookto = direction[0].upper()
 
-    desc = location["look"][lookto] or "empty space"
+    desc = place["look"][lookto] or "empty space"
     print()
     info(f"To the {get_direction(direction)} you see {desc}.")
 
@@ -273,13 +273,13 @@ def do_examine(name=None, *args):
         return
 
     item = get_item(name)
-    if not name in current_location()["items"]:
-        error(f"There is no {name} in {current_location()['name']}.")
+    if not name in current_place()["items"]:
+        error(f"There is no {name} in {current_place()['name']}.")
     if not item:
         error(f"Can't find details about: {name!r}")
 
     print()
-    info(fx.bold(item.get("name", "Unnamed location").title()))
+    info(fx.bold(item.get("name", "Unnamed place").title()))
     print()
     info(mergelines(item["desc"]))
 
@@ -288,10 +288,10 @@ def do_jump(place=None, *args):
     require("jump", place, "place")
     extra_args("jump", args)
 
-    location = get_place(place)
+    place = get_place(place)
 
-    if goto(location["position"]):
-        show(current_location())
+    if goto(place["position"]):
+        show(current_place())
 
 def do_go(direction=None, steps=1, *args):
     """Move the player to a new position based on the direction they wish to
@@ -303,7 +303,7 @@ def do_go(direction=None, steps=1, *args):
 
     pos = step(current_position(), direction, steps)
     if goto(pos):
-        show(current_location())
+        show(current_place())
     else:
         error("You can't go that way.")
 
@@ -327,7 +327,7 @@ def main():
     print()
 
     while True:
-        debug(position=current_position(), location=current_location()["name"])
+        debug(position=current_position(), place=current_place()["name"])
 
         try:
             cmd, args = parse(input("> "))

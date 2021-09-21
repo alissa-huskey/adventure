@@ -4,7 +4,7 @@ from .items import get_item
 
 PLAYER = {
     "pos": None,
-    "location": None,
+    "place": None,
     "health": 100,
     "inventory": defaultdict(int,
         gems=0,
@@ -73,10 +73,10 @@ def is_alive():
 def can_afford(price):
     return get_inventory("gems") >= abs(price)
 
-def current_location(val=None):
+def current_place(val=None):
     if val:
-        PLAYER["location"] = val
-    return PLAYER["location"]
+        PLAYER["place"] = val
+    return PLAYER["place"]
 
 def current_position(val=None):
     if val:

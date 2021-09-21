@@ -140,7 +140,7 @@ BY_POS = {p["position"]: p for p in PLACES}
 BY_NAME = {p["name"]: p for p in PLACES}
 
 def get_place(key):
-    """Return the location associated with either its name or position key.
+    """Return the place associated with either its name or position key.
 
     >>> get_place((0, 0))["name"]
     'home'
@@ -149,14 +149,14 @@ def get_place(key):
     (0, 0)
     """
     if isinstance(key, str):
-        location = BY_NAME.get(key)
+        place = BY_NAME.get(key)
     else:
-        location = BY_POS.get(key)
+        place = BY_POS.get(key)
 
-    if not location:
+    if not place:
         error(f'No such place: {key!r}')
 
-    return location
+    return place
 
 def get_direction(direction):
     direction = str(direction).lower()

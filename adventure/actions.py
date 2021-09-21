@@ -9,7 +9,7 @@ from .player import (
     get_inventory,
     adjust_health,
     adjust_inventory,
-    current_location,
+    current_place,
     inventory_for_action,
     can_afford,
     state,
@@ -49,17 +49,17 @@ def inventory_action(command, words):
 
 def local_action(command, words):
     """Return command function, item, and args based on the players current
-    location, or raise user error.
+    place, or raise user error.
     """
 
     args = words[:]
-    location = current_location()
-    items = location["actions"].get(command, set())
+    place = current_place()
+    items = place["actions"].get(command, set())
     item = first(items.intersection(args), None)
     state(item=item)
 
-    # no such action at this location
-    if command not in location["actions"]:
+    # no such action at this place
+    if command not in place["actions"]:
         raise NotFound()
 
     # missing required item for action
@@ -111,10 +111,10 @@ def do_pet(item=None, color=None, *args):
 def do_buy(name=None, *args):
     """."""
     require("buy", name, "item")
-    location = current_location()
+    place = current_place()
     item = get_item(name)
 
-    if not item in current_location()["items"]:
+    if not item in current_place()["items"]:
         error(f"(buy) No {item} here.")
 
     if not item:
