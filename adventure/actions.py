@@ -4,7 +4,7 @@ from more_itertools import first
 
 from .formatting import info, error, NotFound
 from .args import require
-from .objects import COLORS, MOODS, get_object
+from .items import COLORS, MOODS, get_item
 from .player import (
     get_inventory,
     adjust_health,
@@ -24,56 +24,56 @@ def get_action(name):
 
 def inventory_action(command, words):
     args = words[:]
-    objects = inventory_for_action(command)
-    thing = first(objects.intersection(args), None)
-    state(thing=thing)
+    items = inventory_for_action(command)
+    item = first(items.intersection(args), None)
+    state(item=item)
 
     # no such inventory action
-    if not objects:
+    if not items:
         raise NotFound()
 
-    # missing required object for action
+    # missing required item for action
     if not args:
         error(f'You need to say what you want to {command}.')
 
-    # thing not in inventory
-    if not thing:
+    # item not in inventory
+    if not item:
         error(f"({command}) You have no {args[0]} in your inventory.")
 
-    # make sure thing is the first arg
-    if thing and thing != args[0]:
-        args.remove(thing)
-        args.insert(0, thing)
+    # make sure item is the first arg
+    if item and item != args[0]:
+        args.remove(item)
+        args.insert(0, item)
 
     return (get_action(command), args)
 
 def local_action(command, words):
-    """Return command function, object, and args based on the players current
+    """Return command function, item, and args based on the players current
     location, or raise user error.
     """
 
     args = words[:]
     location = current_location()
-    objects = location["actions"].get(command, set())
-    thing = first(objects.intersection(args), None)
-    state(thing=thing)
+    items = location["actions"].get(command, set())
+    item = first(items.intersection(args), None)
+    state(item=item)
 
     # no such action at this location
     if command not in location["actions"]:
         raise NotFound()
 
-    # missing required object for action
-    if objects and not args:
+    # missing required item for action
+    if items and not args:
         error(f'You need to say what you want to {command}.')
 
-    # no valid object for this action
-    if objects and not thing:
+    # no valid item for this action
+    if items and not item:
         error(f"({command}) There's no {args[0]} nearby.")
 
-    # make sure thing is the first arg
-    if thing and thing != args[0]:
-        args.remove(thing)
-        args.insert(0, thing)
+    # make sure item is the first arg
+    if item and item != args[0]:
+        args.remove(item)
+        args.insert(0, item)
 
     return (get_action(command), args)
 
@@ -108,43 +108,43 @@ def do_pet(item=None, color=None, *args):
     print()
     info(f"The {mood} {color} dragon {message}")
 
-def do_buy(thing=None, *args):
+def do_buy(name=None, *args):
     """."""
-    require("buy", thing, "thing")
+    require("buy", name, "item")
     location = current_location()
-    item = get_object(thing)
+    item = get_item(name)
 
-    if not thing in current_location()["objects"]:
-        error(f"(buy) No {thing} here.")
+    if not item in current_location()["items"]:
+        error(f"(buy) No {item} here.")
 
     if not item:
-        error(f"Couldn't find details about: {thing}", user=False)
+        error(f"Couldn't find details about: {item}", user=False)
 
     if not item.get("price"):
-        error(f"(buy) {thing} is not for sale.")
+        error(f"(buy) {item} is not for sale.")
 
     if not can_afford(item["price"]):
         error(f"(buy) Sorry, you don't have {abs(item['price'])} gems.")
 
-    adjust_inventory(thing, 1)
+    adjust_inventory(item, 1)
     adjust_inventory("gems", item["price"])
     print()
-    info(f"Bought a {thing} for {abs(item['price'])} gems.")
+    info(f"Bought a {item} for {abs(item['price'])} gems.")
 
 def do_consume(name=None, *args):
     action = state()["command"]
-    require(action, name, "object")
+    require(action, name, "item")
 
-    thing = get_object(name)
+    item = get_item(name)
 
-    if not thing:
-        error(f"({action}) Unable to find details about object: {thing}",
+    if not item:
+        error(f"({action}) Unable to find details about item: {item}",
                   user=False)
 
     if not get_inventory(name):
         info(f"Sorry, you don't have any {name} to {action}.")
 
-    health_points = thing.get("health")
+    health_points = item.get("health")
     message = f"You {action} the {name}"
 
     adjust_inventory(name, -1)

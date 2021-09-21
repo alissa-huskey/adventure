@@ -6,4 +6,3 @@ modify UserError to take a command
 rename location to place
 figure out a way to examine inventory items ("inventory thing", "get thing"?)
 move inventory functions to inventory.py
-rename objects to items or things

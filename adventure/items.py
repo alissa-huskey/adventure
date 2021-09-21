@@ -1,7 +1,7 @@
 COLORS = ["red", "black", "silver"]
 MOODS = ["cheerful", "lonely", "cranky"]
 
-OBJECTS = {
+ITEMS = {
     "desk": {
         "name": "desk",
         "desc": """
@@ -93,5 +93,5 @@ OBJECTS = {
     },
 }
 
-def get_object(key):
-    return OBJECTS.get(key)
+def get_item(key):
+    return ITEMS.get(key)

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from .objects import get_object
+from .items import get_item
 
 PLAYER = {
     "pos": None,
@@ -13,7 +13,7 @@ PLAYER = {
         "command": None,
         "args": None,
         "action": None,
-        "thing": None,
+        "item": None,
     }
 }
 
@@ -29,17 +29,17 @@ def get_inventory(name):
     return PLAYER["inventory"][name]
 
 def add_inventory_action(name):
-    thing = get_object(name)
-    if not thing:
+    item = get_item(name)
+    if not item:
         return
-    for action in thing.get("actions", []):
+    for action in item.get("actions", []):
         INVENTORY_ACTIONS[action].add(name)
 
 def remove_inventory_action(name):
-    thing = get_object(name)
-    if not thing:
+    item = get_item(name)
+    if not item:
         return
-    for action in thing.get("actions", []):
+    for action in item.get("actions", []):
         INVENTORY_ACTIONS[action].remove(name)
 
 def adjust_inventory(name, amount):
@@ -53,7 +53,7 @@ def adjust_inventory(name, amount):
 
 def state(**kwargs):
     if kwargs:
-        for key in ("args", "command", "action", "thing"):
+        for key in ("args", "command", "action", "item"):
             val = kwargs.pop(key, None)
             if val:
                 PLAYER["state"][key] = val

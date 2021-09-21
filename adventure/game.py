@@ -6,7 +6,7 @@ from pprint import pprint
 
 from console import fx, fg
 
-from .objects import get_object
+from .items import get_item
 from .args import require, validate, extra_args
 from .actions import local_action, inventory_action
 from .help import get_help, COMMANDS
@@ -52,17 +52,17 @@ def show(location, long=False):
     info(themes.title(location.get("name", "Unnamed location").title()))
     print()
 
-    objects = location.get("objects", [])
+    items = location.get("items", [])
     if long or not location.get("visited"):
         desc = location.get("description")
     else:
         desc = location.get("short") or location.get("description")
 
     if desc:
-        if objects:
+        if items:
             desc = re.sub(
-                rf'\b({"|".join(objects)})\b',
-                rf'{themes.things}\1{fg.default}',
+                rf'\b({"|".join(items)})\b',
+                rf'{themes.items}\1{fg.default}',
                 desc,
                 flags=re.IGNORECASE,
             )
@@ -252,9 +252,9 @@ def do_look(direction=None, *args):
         return
 
     if direction.strip().lower() == "around":
-        objects = location["objects"] or None
-        if objects:
-            info("You see " + ", ".join([str(fx.bold(o)) for o in objects]) + ".")
+        items = location["items"] or None
+        if items:
+            info("You see " + ", ".join([str(fx.bold(o)) for o in items]) + ".")
         return
 
     lookto = direction[0].upper()
@@ -265,23 +265,23 @@ def do_look(direction=None, *args):
 
 def do_examine(name=None, *args):
     """."""
-    require("examine", name, "thing")
+    require("examine", name, "item")
     extra_args("look", args)
 
     if name in ["self", "me"]:
         do_stats()
         return
 
-    thing = get_object(name)
-    if not name in current_location()["objects"]:
+    item = get_item(name)
+    if not name in current_location()["items"]:
         error(f"There is no {name} in {current_location()['name']}.")
-    if not thing:
+    if not item:
         error(f"Can't find details about: {name!r}")
 
     print()
-    info(fx.bold(thing.get("name", "Unnamed location").title()))
+    info(fx.bold(item.get("name", "Unnamed location").title()))
     print()
-    info(mergelines(thing["desc"]))
+    info(mergelines(item["desc"]))
 
 def do_jump(place=None, *args):
     """Jump straight to a place"""
@@ -310,8 +310,8 @@ def do_go(direction=None, steps=1, *args):
 def do_inventory(*args):
     """Show inventory"""
     print()
-    for thing, amount in get_all_inventory().items():
-        info(f"({amount: >3}) {thing}")
+    for item, amount in get_all_inventory().items():
+        info(f"({amount: >3}) {item}")
 
 def do_stats(*args):
     """Show player stats"""

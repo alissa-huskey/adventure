@@ -7,5 +7,5 @@ cmd = fg.i123
 arg = fg.i111
 arg_default = fg.i210
 usage_arg = arg + fx.italic
-things = fg.i167
+items = fg.i167
 

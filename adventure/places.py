@@ -44,7 +44,7 @@ PLACES = [
         "enter": (
             "You find yourself in your simple one-room house."
         ),
-        "objects": ["bed", "desk", "chair", "counter", "stove", "door", "book"],
+        "items": ["bed", "desk", "chair", "counter", "stove", "door", "book"],
         "actions": {},
     },
     {
@@ -64,7 +64,7 @@ PLACES = [
             "S": "",
             "W": "your house",
         },
-        "objects": ["bench", "stick", "walking stick", "gate"],
+        "items": ["bench", "stick", "walking stick", "gate"],
         "actions": {},
     },
     {
@@ -88,7 +88,7 @@ PLACES = [
             "S": "",
             "W": "a courtyard",
         },
-        "objects": ["flower pots", "planters"],
+        "items": ["flower pots", "planters"],
         "actions": {},
     },
     {
@@ -101,7 +101,7 @@ PLACES = [
             "S": "cobblestone path into town",
             "W": None,
         },
-        "objects": ["elixr", "cloak"],
+        "items": ["elixr", "cloak"],
         "actions": {
             "buy": {"elixr", "cloak"},
         },
@@ -116,7 +116,7 @@ PLACES = [
             "S": "a cave",
             "W": "path",
         },
-        "objects": [],
+        "items": [],
         "actions": {},
     },
     {
@@ -129,7 +129,7 @@ PLACES = [
             "E": "",
             "W": "",
         },
-        "objects": ["dragon"],
+        "items": ["dragon"],
         "actions": {
             "pet": {"dragon"},
         },

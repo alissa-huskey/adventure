@@ -70,7 +70,7 @@ COMMANDS = [
         "aliases": ["x", "ex", "exam", "examine"],
         "arguments": {
             "required": {
-                "thing": {
+                "item": {
                     "desc": "what you want to examine",
                     "notes": "self or me redirects to stats command",
                 }
