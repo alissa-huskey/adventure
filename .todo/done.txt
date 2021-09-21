@@ -10,3 +10,4 @@ x 2021-09-21 move object descriptions to objects dict
 x 2021-09-21 add detailed description to each room, possibly an "enter" key for the first time they come in the room
 x 2021-09-21 rename objects to items or things
 x 2021-09-21 rename location to place
+x 2021-09-21 2021-09-21 move dictionaries into adventure/data @housekeeping

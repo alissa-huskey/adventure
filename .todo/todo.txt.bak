@@ -8,7 +8,7 @@
 2021-09-21 make current place bold on map @feature
 2021-09-21 descriptions for courtyard items @narrative
 2021-09-21 multi-word tokens @feature
-2021-09-21 move dictionaries into adventure/data @housekeeping
+x 2021-09-21 2021-09-21 move dictionaries into adventure/data @housekeeping
 2021-09-21 legend of dragons in book @narrative
 2021-09-21 remove direction argument from do_look @features
 2021-09-21 description for path items @narrative

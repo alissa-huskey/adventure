@@ -8,7 +8,6 @@
 2021-09-21 make current place bold on map @feature
 2021-09-21 descriptions for courtyard items @narrative
 2021-09-21 multi-word tokens @feature
-2021-09-21 move dictionaries into adventure/data @housekeeping
 2021-09-21 legend of dragons in book @narrative
 2021-09-21 remove direction argument from do_look @features
 2021-09-21 description for path items @narrative
@@ -18,4 +17,3 @@
 2021-09-21 cave description @narrative
 2021-09-21 add delay for effect with time.sleep in do_pet @feature
 2021-09-21 multiple item tokens (ie ['stick', 'walking-stick']) @feature
-2021-09-21 .
