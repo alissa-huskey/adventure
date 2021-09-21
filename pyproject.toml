@@ -21,6 +21,9 @@ pylama = "^7.7.1"
 pytest = "^6.2.5"
 autopep8 = "^1.5.7"
 
+[tool.poetry.scripts]
+game = "adventure.game:main"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
