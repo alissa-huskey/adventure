@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "adventure"
+version = "0.1.0"
+description = "text-based adventure game"
+authors = ["Alissa Huskey <alissa.huskey@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+colorama = "^0.4.4"
+console = "^0.9907"
+blessed = "^1.19.0"
+more-itertools = "^8.10.0"
+
+[tool.poetry.dev-dependencies]
+xdoctest = "^0.15.8"
+black = "^21.9b0"
+ipython = "^7.27.0"
+neovim = "^0.3.1"
+pylama = "^7.7.1"
+pytest = "^6.2.5"
+autopep8 = "^1.5.7"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

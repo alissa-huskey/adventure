@@ -1,0 +1,10 @@
+add do_intro command
+x 2021-09-21 add detailed description to each room, possibly an "enter" key for the first time they come in the room
+add docstrings
+add tests
+add do_take and do_drop
+modify UserError to take a command
+rename location to place
+figure out a way to examine inventory items ("inventory thing", "get thing"?)
+move inventory functions to inventory.py
+rename objects to items or things

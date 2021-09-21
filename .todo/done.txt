@@ -1,0 +1,10 @@
+x 2021-09-21 add do_drink and support per-object actions
+x 2021-09-21 add do_buy
+x 2021-09-21 add do_help command
+x 2021-09-21 add general look command
+x 2021-09-21 show room name and title when you enter every room
+x 2021-09-21 add do_inventory
+x 2021-09-21 add getter functions for all data
+x 2021-09-21 rename describe to examine
+x 2021-09-21 move object descriptions to objects dict
+x 2021-09-21 add detailed description to each room, possibly an "enter" key for the first time they come in the room
