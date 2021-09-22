@@ -73,7 +73,7 @@ PLACES = [
             stone archways.
 
             Flower pots dot the steps leading to front doors and spots of color
-            spill out of window planters. Above the steet laundry hangs from
+            spill out of window planters. Above the street laundry hangs from
             lines strung across high windows.
 
             A hand carved sign hangs over a door on the north side of the street
