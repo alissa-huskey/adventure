@@ -10,6 +10,7 @@ from .items import get_item
 from .args import require, validate, extra_args
 from .actions import local_action, inventory_action
 from .help import get_help, COMMANDS
+from .inventory import get_all_inventory, get_inventory
 from .places import (
     COMPASS,
     COMPASS_OPTIONS,
@@ -33,8 +34,6 @@ from .player import (
     is_alive,
     current_place,
     current_position,
-    get_all_inventory,
-    get_inventory,
     get_health,
     state,
 )
@@ -272,7 +271,8 @@ def do_look(direction=None, *args):
     info(f"To the {get_direction(direction)} you see {desc}.")
 
 def do_examine(name=None, *args):
-    """."""
+    """Look at an item in the current place or in inventory."""
+
     require("examine", name, "item")
     extra_args("look", args)
 
@@ -281,8 +281,9 @@ def do_examine(name=None, *args):
         return
 
     item = get_item(name)
-    if not name in current_place()["items"]:
+    if not (name in current_place()["items"] or get_inventory(name)):
         error(f"There is no {name} in {current_place()['name']}.")
+
     if not item:
         error(f"Can't find details about: {name!r}")
 

@@ -3,8 +3,6 @@
 2021-09-21 add tests @housekeeping
 2021-09-21 add do_take and do_drop  @feature
 2021-09-21 modify UserError to take a command @housekeeping
-2021-09-21 figure out a way to examine inventory items ("inventory thing", "get thing"?)  @feature
-2021-09-21 move inventory functions to inventory.py @housekeeping
 2021-09-21 make current place bold on map @feature
 2021-09-21 descriptions for courtyard items @narrative
 2021-09-21 multi-word tokens @feature
@@ -17,3 +15,5 @@
 2021-09-21 cave description @narrative
 2021-09-21 add delay for effect with time.sleep in do_pet @feature
 2021-09-21 multiple item tokens (ie ['stick', 'walking-stick']) @feature
+2021-09-22 move INVENTORY_ACTIONS to data/inventory.py @housekeeping
+2021-09-22 add health to do_stats @feature

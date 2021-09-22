@@ -5,14 +5,12 @@ from more_itertools import first
 from .formatting import info, error, NotFound
 from .args import require
 from .items import COLORS, MOODS, get_item
-from .player import (
+from .player import adjust_health, current_place, state
+from .inventory import (
     get_inventory,
-    adjust_health,
     adjust_inventory,
-    current_place,
     inventory_for_action,
     can_afford,
-    state,
 )
 
 
@@ -114,22 +112,23 @@ def do_buy(name=None, *args):
     place = current_place()
     item = get_item(name)
 
-    if not item in current_place()["items"]:
-        error(f"(buy) No {item} here.")
+    if not name in current_place()["items"]:
+        error(f"(buy) No {name} here.")
 
     if not item:
-        error(f"Couldn't find details about: {item}", user=False)
+        error(f"Couldn't find details about: {name}", user=False)
 
     if not item.get("price"):
-        error(f"(buy) {item} is not for sale.")
+        error(f"(buy) {name} is not for sale.")
 
     if not can_afford(item["price"]):
         error(f"(buy) Sorry, you don't have {abs(item['price'])} gems.")
 
-    adjust_inventory(item, 1)
+    adjust_inventory(name, 1)
     adjust_inventory("gems", item["price"])
+
     print()
-    info(f"Bought a {item} for {abs(item['price'])} gems.")
+    info(f"Bought a {name} for {abs(item['price'])} gems.")
 
 def do_consume(name=None, *args):
     action = state()["command"]
