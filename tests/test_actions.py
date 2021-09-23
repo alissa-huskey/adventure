@@ -243,3 +243,9 @@ def test_do_pet(args, context):
 def test_do_quit(args):
     with pytest.raises(SystemExit):
         do_quit(*args)
+
+def do_shop():
+    do_jump("market")
+
+    with does_not_raise():
+        do_shop()

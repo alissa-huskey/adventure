@@ -370,8 +370,8 @@ def do_stats(*args):
     print()
     bar("health", get_health())
 
-## ACTIONS #######################################
 
+## ACTIONS #######################################
 
 ACTIONS = {
     "buy": do_buy,
