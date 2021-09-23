@@ -47,7 +47,7 @@ class Grid:
         self.width = width
 
         line = indent + " +-" + div.join(["-"*width for _ in range(self.size+1)]) + "-+ \n"
-        rows = [[f"{c:^{width}}" for c in r.values()] for r in self.data.values()]
+        rows = [[TERM.center(c, width) for c in r.values()] for r in self.data.values()]
         rows = [indent + (sep.join([""]+row+[""]) + "\n") for row in rows]
 
         return line + f"{line}".join(rows) + line

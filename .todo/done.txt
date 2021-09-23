@@ -16,3 +16,5 @@ x 2021-09-22 2021-09-21 figure out a way to examine inventory items ("inventory 
 x 2021-09-22 2021-09-22 test that x item works for inventory items not in room @feature
 x 2021-09-22 2021-09-21 market items description @narrative
 x 2021-09-22 2021-09-21 market description @narrative
+x 2021-09-22 2021-09-22 unify inventory_action and local_action @houskeeping
+x 2021-09-22 2021-09-21 make current place bold on map @feature

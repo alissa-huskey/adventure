@@ -11,6 +11,7 @@ from adventure.player import adjust_health, current_place, state, get_health
 from adventure.data.help import COMMANDS
 from adventure.formatting import (
     info,
+    debug,
     error,
     NotFound,
     bar,
@@ -45,9 +46,13 @@ def do_map(*args):
     grid = Grid()
     for place in PLACES:
         x, y = place.get("position")
+        name = place.get("name", "")
+
+        if current_place() == place:
+            name = fx.bold(name)
         try:
             debug(f"place: {place['name']!r}, ({x=}, {y=})")
-            grid.set(y, x, place.get("name", ""))
+            grid.set(y, x, name)
         except IndexError:
             error(f"Couldn't map location: {place['name']!r}, ({x=}, {y=})")
 

@@ -3,7 +3,7 @@
 2021-09-21 add tests @housekeeping
 2021-09-21 add do_take and do_drop  @feature
 2021-09-21 modify UserError to take a command @housekeeping
-2021-09-21 make current place bold on map @feature
+x 2021-09-22 2021-09-21 make current place bold on map @feature
 2021-09-21 descriptions for courtyard items @narrative
 2021-09-21 multi-word tokens @feature
 2021-09-21 legend of dragons in book @narrative
@@ -13,7 +13,6 @@
 2021-09-21 cave description @narrative
 2021-09-21 add delay for effect with time.sleep in do_pet @feature
 2021-09-21 multiple item tokens (ie ['stick', 'walking-stick']) @feature
-2021-09-22 move INVENTORY_ACTIONS to data/inventory.py @housekeeping
 2021-09-22 add health to do_stats @feature
 2021-09-22 don't let health go above 100 @feature
 2021-09-22 don't let the user keep petting the dragon @feature
@@ -24,6 +23,6 @@
 2021-09-22 add delayed steps when petting the dragon @feature @narrative
 2021-09-22 remove some items from the shop when bought @feature
 2021-09-22 fancier inventory display @feature
-2021-09-22 unify inventory_action and local_action @houskeeping
 2021-09-22 add price to examine if in market @feature
 2021-09-22 add quantity to examine if it's an inventory item @feature
+2021-09-22 show alias(es) in help @feature
