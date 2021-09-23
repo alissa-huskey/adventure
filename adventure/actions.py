@@ -91,7 +91,9 @@ def contextual_action(command, words, local=False):
 
 def get_action(name):
     """Return the command function for a particular name or alias"""
-    return ACTIONS.get(name)
+    action = ACTIONS.get(name)
+    if action:
+        return action.get("func")
 
 ## action functions #############################
 
@@ -374,19 +376,19 @@ def do_stats(*args):
 ## ACTIONS #######################################
 
 ACTIONS = {
-    "buy": do_buy,
-    "pet": do_pet,
-    "drink": do_consume,
-    "shop": do_shop,
-    "stats": do_stats,
-    "map": do_map,
-    "inventory": do_inventory,
-    "look": do_look,
-    "examine": do_examine,
-    "go": do_go,
-    "jump": do_jump,
-    "help": do_help,
-    "quit": do_quit,
+    "buy": {"func": do_buy, "place": "market"},
+    "pet": {"func": do_pet, "place": "cave"},
+    "drink": {"func": do_consume, "item": "elixr"},
+    "shop": {"func": do_shop, "place": "market"},
+    "stats": {"func": do_stats},
+    "map": {"func": do_map},
+    "inventory": {"func": do_inventory},
+    "look": {"func": do_look},
+    "examine": {"func": do_examine},
+    "go": {"func": do_go},
+    "jump": {"func": do_jump},
+    "help": {"func": do_help},
+    "quit": {"func": do_quit},
 }
 
 # alias -> command func
