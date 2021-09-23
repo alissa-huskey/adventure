@@ -12,7 +12,7 @@ from adventure.data.places import (
     BY_POS,
     BY_NAME,
 )
-from adventure import themes
+from adventure import themes, NotFound
 
 def show(place, long=False):
     """Print stylized place description
@@ -76,7 +76,7 @@ def get_place(key):
         place = BY_POS.get(key)
 
     if not place:
-        error(f'No such place: {key!r}')
+        raise NotFound()
 
     return place
 

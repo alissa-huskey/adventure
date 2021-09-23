@@ -186,10 +186,12 @@ def do_go(direction=None, steps=1, *args):
     extra_args("go", args)
 
     pos = step(current_position(), direction, steps)
-    if goto(pos):
-        show(current_place())
-    else:
+    try:
+        goto(pos)
+    except NotFound:
         error("You can't go that way.")
+
+    show(current_place())
 
 def do_inventory(*args):
     """Show inventory"""
@@ -198,6 +200,8 @@ def do_inventory(*args):
         info(f"({amount: >3}) {item}")
 
 def do_help(command=None, *args):
+    extra_args("help", args)
+
     # list help topics
     if not command:
         width = max(map(len, [x["name"] for x in COMMANDS])) + 2
@@ -257,15 +261,22 @@ def do_help(command=None, *args):
     for t in tables:
         print(t.text)
 
-def do_jump(place=None, *args):
+def do_jump(name=None, *args):
     """Jump straight to a place"""
-    require("jump", place, "place")
+    require("jump", name, "place")
     extra_args("jump", args)
 
-    place = get_place(place)
+    try:
+        place = get_place(name)
+    except NotFound:
+        error(f"I don't know where {name!r} is.")
 
-    if goto(place["position"]):
-        show(current_place())
+    try:
+        goto(place["position"])
+    except NotFound:
+        error("Failed to jump to: {name!r} at {place['position']}", user=False)
+
+    show(current_place())
 
 def do_look(direction=None, *args):
     """Describe the scenery in the direction the player looks."""

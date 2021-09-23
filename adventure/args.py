@@ -15,13 +15,13 @@ def validate(cmd, val, name, choices=[], options=[], klass=None):
     if klass:
         try:
             val = klass(val)
-        except TypeError:
-            error(f"({cmd}) {name} invalid: {val}")
+        except (TypeError, ValueError):
+            error(f"({cmd}) {name} should be a {klass.__name__}. got: {val!r}")
 
     # check for valid option
     if (choices or options) and \
             val.lower() not in [str(x).lower() for x in list(choices)+list(options)]:
-            error(f'({cmd}) {name} invalid: "{val}" ({", ".join(choices)})')
+            error(f'({cmd}) {name} invalid: {val!r} ({", ".join(choices)})')
 
     return val
 

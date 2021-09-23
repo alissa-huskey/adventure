@@ -4,7 +4,7 @@ import pytest
 
 from adventure.inventory import adjust_inventory, get_inventory
 from adventure import NotFound, UserError
-from adventure.player import state
+from adventure.player import state, current_place
 from adventure.actions import (
     contextual_action,
     get_action,
@@ -75,16 +75,15 @@ def test_contextual_action_local_raises(place, action, in_args, klass):
         func, args = contextual_action(action, in_args, local=True)
 
 
-@pytest.mark.parametrize("do_func", [
-    do_inventory,
-    do_help,
-    do_map,
-    do_stats,
+@pytest.mark.parametrize("func, args, context", [
+    (do_inventory, [], does_not_raise()),
+    (do_map, [], does_not_raise()),
+    (do_stats, [], does_not_raise()),
 ])
-def test_do_actions(do_func):
+def test_do_actions(func, args, context):
     """Simple actions that just print something."""
-    with does_not_raise():
-        do_func()
+    with context:
+        func(*args)
 
 @pytest.mark.parametrize("cmd, func", [
     ("help", do_help),
@@ -130,6 +129,7 @@ def test_do_consume(item, args, amount, context):
 
     if not ex:
         assert not get_inventory(item)
+
 @pytest.mark.parametrize("place, amount, item, args, context", [
     ("home", 0, None, [], pytest.raises(UserError, match="examine needs a item")),
     ("home", 0, "bed", [], does_not_raise()),
@@ -148,3 +148,47 @@ def test_do_examine(place, amount, item, args, context):
 
     with context as ex:
         do_examine(item, *args)
+
+@pytest.mark.parametrize("place, direction, dest, args, context", [
+    ("home", None, None, [], pytest.raises(UserError, match="go needs a direction")),
+    ("home", "xxx", None, [], pytest.raises(UserError, match="direction invalid: 'xxx'")),
+    ("home", "w", None, ["xxx"], pytest.raises(UserError, match="steps should be a int")),
+    ("home", "w", None, ["23"], pytest.raises(UserError, match="You can't go that way")),
+    ("home", "east", "courtyard", [], does_not_raise()),
+    ("home", "east", "road", ["3"], does_not_raise()),
+    ("home", "west", None, [], pytest.raises(UserError, match="You can't go that way")),
+])
+def test_do_go(place, direction, dest, args, context):
+    do_jump(place)
+
+    with context as ex:
+        do_go(direction, *args)
+
+    if not ex:
+        assert current_place().get("name") == dest
+
+
+@pytest.mark.parametrize("args, context", [
+    ([], does_not_raise()),
+    (["look"], does_not_raise()),
+    (["map"], does_not_raise()),
+    (["?"], does_not_raise()),
+    (["xxx"], pytest.raises(UserError, match="No such command")),
+    (["quit", "xxx"], pytest.raises(UserError, match="received unknown arguments")),
+])
+def test_do_help(args, context):
+    with context:
+        do_help(*args)
+
+@pytest.mark.parametrize("place, args, context", [
+    ("cave", [], does_not_raise()),
+    (None, [], pytest.raises(UserError, match="jump needs a place")),
+    ("home", ["xxx"], pytest.raises(UserError, match="unknown argument")),
+    ("xxx", [], pytest.raises(UserError, match="I don't know where 'xxx' is"))
+])
+def test_do_jump(place, args, context):
+    with context as ex:
+        do_jump(place, *args)
+
+    if not ex:
+        current_place()["name"] == place
