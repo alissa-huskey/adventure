@@ -3,6 +3,7 @@ from collections import defaultdict
 import re
 
 from console import fg, bg, fx
+from console.screen import sc
 from console.progress import ProgressBar, _ic, _if, _il
 from console.utils import len_stripped
 
@@ -15,7 +16,8 @@ from adventure.player import state
 TERM = Terminal()
 WIDTH = 60
 MARGIN = 3
-MAX=WIDTH-MARGIN
+INDENT = 6
+MAX=WIDTH-(MARGIN+INDENT)
 DEBUG = False
 
 
@@ -42,7 +44,7 @@ class Grid:
         self.data[x][y] = value
 
     def render(self):
-        indent = '     '
+        indent = " " * INDENT
         sep, div = " | ", "-+-"
         width = max([max(map(len, r.values())) for r in self.data.values()])
         self.width = width
@@ -143,8 +145,8 @@ class Table:
 
 def bar(title, val):
 
-    pb = Bar(width=MAX-len(title)-2)
-    print(f"{title.title()} {pb(val-1)}")
+    pb = Bar(width=MAX-(len(title)+MARGIN+3))
+    info(f"{title.title()} {pb(val-1)}")
 
 def hr(char="=", width=WIDTH, margin=""):
     print(margin, char*width, sep="")
@@ -155,14 +157,14 @@ def mergelines(text):
     joined = " ".join([x.strip() if x.strip() else "\n" for x in lines])
     return re.sub("\n ", "\n\n", joined)
 
-def info(*args, before=0, after=0):
-    message = " ".join(map(str, args))
+def info(*args, before=0, after=0, sep=" "):
+    message = sep.join(map(str, args))
 
     lines = TERM.wrap(
         message,
-        width=MAX,
-        initial_indent='      ',
-        subsequent_indent='      ',
+        width=WIDTH-MARGIN,
+        initial_indent=" " * INDENT,
+        subsequent_indent=" " * (INDENT + 2),
     )
 
     print("\n"*before, end="")
@@ -198,4 +200,25 @@ def debug(*args, **kwargs):
     message += " ".join([f"{fx.dim}{fg.yellow}{k}{fx.end}{fx.dim}: {v!r}{fx.end}" for k,v in kwargs.items()])
 
     print(fx.dim(message))
+
+def print_gems(gems):
+    """Print the number of gems"""
+    # print about 20% of the number of icons
+    icons = gems//5
+    icons += (gems and icons <= 0)
+
+    # print the gems label and the icon pseudo-bar
+    print(
+        " " * INDENT,
+        "Gems".ljust(10),
+        "💎" * icons,
+        sep="",
+        end="",
+    )
+
+    # move the cursor to the right where the value should start
+    print(sc.move_x(MAX-4+1), end="")
+
+    # print the number of gems
+    print(TERM.rjust(gems, 3))
 

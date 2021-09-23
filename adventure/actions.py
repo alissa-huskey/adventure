@@ -18,6 +18,8 @@ from adventure.formatting import (
     mergelines,
     Grid,
     Table,
+    MAX,
+    print_gems,
 )
 from adventure.inventory import (
     get_inventory,
@@ -172,7 +174,12 @@ def do_examine(name=None, *args):
     if not (name in current_place()["items"] or get_inventory(name)):
         error(f"There is no {name!r} in {current_place()['name']}.")
 
-    info(fx.bold(item.get("name", "Unnamed place").title()), before=1, after=1)
+    info(
+        fx.bold(item.get("name", "Unnamed place").title().ljust(MAX-10)) + \
+        item.get("icon", ""),
+        before=1,
+        after=1,
+    )
     info(mergelines(item["desc"]))
 
 def do_go(direction=None, steps=1, *args):
@@ -193,9 +200,22 @@ def do_go(direction=None, steps=1, *args):
 
 def do_inventory(*args):
     """Show inventory"""
-    print()
-    for item, amount in get_all_inventory().items():
-        info(f"({amount: >3}) {item}")
+    inventory = get_all_inventory().copy()
+    inventory.pop("gems")
+
+    info(fx.bold("Inventory"), before=1, after=1)
+
+    if not inventory:
+        info("Empty.")
+
+    for name, amount in inventory.items():
+        item = get_item(name)
+
+        info(
+            item.get("icon", "").ljust(4),
+            name.capitalize().ljust(30),
+            f"(x {amount:>2})"
+        )
 
 def do_help(command=None, *args):
     extra_args("help", args)
@@ -362,7 +382,8 @@ def do_shop(*args):
 def do_stats(*args):
     """Show player stats"""
     print()
-    bar("health", get_health())
+    bar("health ❤️", get_health())
+    print_gems(get_inventory("gems"))
 
 
 ## ACTIONS #######################################

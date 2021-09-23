@@ -123,6 +123,8 @@ def main():
         try:
             cmd, args = parse(input("> "))
             cmd(*args)
+        except (EOFError, KeyboardInterrupt):
+            quit()
         except SilentError:
             continue
         except (UnexpectedError, UserError) as err:
