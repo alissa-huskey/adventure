@@ -309,7 +309,16 @@ def do_map(*args):
 
 def do_pet(item=None, color=None, *args):
     """Pet one of the dragon heads."""
+    item_choices = ["dragon", "head"]
+    if item and (item not in item_choices) and (not color):
+        item, color = "dragon", item
+
+    if item and color and color in item_choices:
+        item, color = color, item
+
     color = require("pet", color, "color", choices=COLORS)
+    require("pet", item, "item", choices=item_choices)
+    extra_args("pet", args)
 
     random.shuffle(COLORS)
     dragons = dict(zip(COLORS, MOODS))
@@ -337,6 +346,7 @@ def do_pet(item=None, color=None, *args):
 
     print()
     info(f"The {mood} {color} dragon {message}")
+    return amount, damage
 
 def do_quit(*args):
     quit()

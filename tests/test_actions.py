@@ -4,7 +4,7 @@ import pytest
 
 from adventure.inventory import adjust_inventory, get_inventory
 from adventure import NotFound, UserError
-from adventure.player import state, current_place
+from adventure.player import state, current_place, get_health
 from adventure.actions import (
     contextual_action,
     get_action,
@@ -212,3 +212,25 @@ def test_do_map(place, args, context):
 
     with context:
         do_map(*args)
+
+@pytest.mark.parametrize("args, context", [
+    (["dragon"], pytest.raises(UserError, match="pet needs a color")),
+    (["red"], does_not_raise()),
+    (["red", "dragon"], does_not_raise()),
+    (["red", "head"], does_not_raise()),
+    (["dragon", "red"], does_not_raise()),
+    (["dragon", "xxx"], pytest.raises(UserError, match="color invalid")),
+    (["xxx", "dragon"], pytest.raises(UserError, match="color invalid")),
+    (["dragon", "red", "xxx"], pytest.raises(UserError, match="unknown argument")),
+    (["red", "monkey"], pytest.raises(UserError, match="color invalid")),
+    ([], pytest.raises(UserError, match="pet needs a color")),
+])
+def test_do_pet(args, context):
+    do_jump("cave")
+
+    with context as ex:
+        award, damage = do_pet(*args)
+
+    if not ex:
+        assert get_health() == 100 + damage
+        assert get_inventory("gems") == award
