@@ -1,4 +1,4 @@
-from .places import COMPASS
+from adventure.places import COMPASS
 
 
 COMMANDS = [

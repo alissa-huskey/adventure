@@ -1,4 +1,4 @@
-from .formatting import error
+from adventure.formatting import error
 
 def extra_args(cmd, args):
     if not args:

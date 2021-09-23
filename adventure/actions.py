@@ -4,12 +4,12 @@ import time
 from more_itertools import first
 from console import fg, fx
 
-from .args import require, validate, extra_args
-from .items import COLORS, MOODS, get_item
-from .help import get_help
-from .player import adjust_health, current_place, state, get_health
-from .data.help import COMMANDS
-from .formatting import (
+from adventure.args import require, validate, extra_args
+from adventure.items import COLORS, MOODS, get_item
+from adventure.help import get_help
+from adventure.player import adjust_health, current_place, state, get_health
+from adventure.data.help import COMMANDS
+from adventure.formatting import (
     info,
     error,
     NotFound,
@@ -18,14 +18,14 @@ from .formatting import (
     Grid,
     Table,
 )
-from .inventory import (
+from adventure.inventory import (
     get_inventory,
     adjust_inventory,
     inventory_for_action,
     can_afford,
     get_all_inventory,
 )
-from .places import (
+from adventure.places import (
     COMPASS,
     COMPASS_OPTIONS,
     PLACES,
@@ -37,7 +37,7 @@ from .places import (
     step,
     show,
 )
-from . import themes
+from adventure import themes
 
 ACTIONS = {}
 
@@ -204,21 +204,32 @@ def do_stats(*args):
 def get_action(name):
     return ACTIONS.get(name)
 
-def inventory_action(command, words):
-    """Return command function, and args from actions available on inventory items
-    associated with the current command, or raise NotFound error.
+def contextual_action(command, words, local=False):
+    """Return command function, and args from actions available based on context or
+       raise NotFound error. Either actions for a specific place if local, or actions for
+       an item in inventory.
     """
     args = words[:]
-    items = inventory_for_action(command)
-    item = first(items.intersection(args), None)
-    state(item=item)
 
-    # no such inventory action
-    if not items:
-        raise NotFound()
+    if local:
+        place = current_place()
+        items = place["actions"].get(command, set())
+
+        # no such action at this place
+        if command not in place["actions"]:
+            raise NotFound()
+    else:
+        items = inventory_for_action(command)
+
+        # no such inventory action
+        if not items:
+            raise NotFound()
 
     # item is required
     if items:
+
+        item = first(items.intersection(args), None)
+        state(item=item)
 
         # missing required item for action
         if not args:
@@ -226,43 +237,13 @@ def inventory_action(command, words):
 
         # item not in inventory
         if not item:
-            error(f"({command}) You have no {args[0]} in your inventory.")
+            if local:
+                error(f"({command}) There's no {args[0]} nearby.")
+            else:
+                error(f"({command}) You have no {args[0]} in your inventory.")
 
         # make sure item is the first arg
-        if item and item != args[0]:
-            args.remove(item)
-            args.insert(0, item)
-
-    return (get_action(command), args)
-
-def local_action(command, words):
-    """Return command function, item, and args based on the players current
-    place, or raise user error.
-    """
-
-    args = words[:]
-    place = current_place()
-    items = place["actions"].get(command, set())
-
-    # no such action at this place
-    if command not in place["actions"]:
-        raise NotFound()
-
-    # if item is required
-    if items:
-        item = first(items.intersection(args), None)
-        state(item=item)
-
-        # missing required item for action
-        if items and not args:
-            error(f'You need to say what you want to {command}.')
-
-        # no valid item for this action
-        if items and not item:
-            error(f"({command}) There's no {args[0]} nearby.")
-
-        # make sure item is the first arg
-        if item and item != args[0]:
+        if item != args[0]:
             args.remove(item)
             args.insert(0, item)
 

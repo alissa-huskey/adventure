@@ -2,9 +2,9 @@ import re
 
 from console import fg
 
-from .formatting import info, error, mergelines
-from .player import current_position, current_place
-from .data.places import (
+from adventure.formatting import info, error, mergelines
+from adventure.player import current_position, current_place
+from adventure.data.places import (
     COMPASS,
     MOVEMENTS,
     COMPASS_OPTIONS,
@@ -12,7 +12,7 @@ from .data.places import (
     BY_POS,
     BY_NAME,
 )
-from . import themes
+from adventure import themes
 
 def show(place, long=False):
     """Print stylized place description

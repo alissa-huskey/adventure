@@ -1,11 +1,11 @@
-from .items import get_item
-from .data.player import PLAYER, INVENTORY_ACTIONS
+from adventure.items import get_item
+from adventure.data.player import player, all_inventory_actions
 
 def get_all_inventory():
-    return PLAYER["inventory"]
+    return player()["inventory"]
 
 def get_inventory(name):
-    return PLAYER["inventory"][name]
+    return player()["inventory"][name]
 
 def add_inventory_action(name):
     """Add to list of actions available for current inventory items."""
@@ -13,7 +13,7 @@ def add_inventory_action(name):
     if not item:
         return
     for action in item.get("actions", []):
-        INVENTORY_ACTIONS[action].add(name)
+        all_inventory_actions()[action].add(name)
 
 def remove_inventory_action(name):
     """Remove from list of actions available for current inventory items."""
@@ -21,31 +21,31 @@ def remove_inventory_action(name):
     if not item:
         return
     for action in item.get("actions", []):
-        INVENTORY_ACTIONS[action].remove(name)
+        all_inventory_actions()[action].remove(name)
 
 def adjust_inventory(name, amount):
     """Add to amount to players inventory name, and update the list of available for
     current inventory if applicable."""
     # if we're adding the first of this item
-    if amount > 0 and not PLAYER["inventory"][name]:
+    if amount > 0 and not player()["inventory"][name]:
         # add the actions for this item
         add_inventory_action(name)
 
     # modify inentory
-    PLAYER["inventory"][name] += amount
+    player()["inventory"][name] += amount
 
     # if removing the last of this item
-    if not PLAYER["inventory"][name]:
+    if not player()["inventory"][name]:
 
         # remove actions for this item
         remove_inventory_action(name)
 
         # don't keep zero item inventory items except for gems
         if name != "gems":
-            del PLAYER["inventory"][name]
+            del player()["inventory"][name]
 
 def inventory_for_action(name):
-    return INVENTORY_ACTIONS[name]
+    return all_inventory_actions().get(name)
 
 def can_afford(price):
     return get_inventory("gems") >= abs(price)

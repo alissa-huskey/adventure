@@ -3,28 +3,27 @@
 import shlex
 from pprint import pprint
 
-from .places import COMPASS_OPTIONS
-from .formatting import (
+from adventure.places import COMPASS_OPTIONS
+from adventure.formatting import (
     info,
     error,
     debug,
     print_error,
     hr,
 )
-from .player import (
+from adventure.player import (
     is_alive,
     current_place,
     current_position,
     state,
 )
-from .actions import (
-    local_action,
-    inventory_action,
+from adventure.actions import (
+    contextual_action,
     do_jump,
     do_go,
     ACTIONS
 )
-from . import (
+from adventure import (
     Error,
     NotFound,
     UserError,
@@ -50,10 +49,10 @@ def parse(response):
     # special local and inventory actions
     if not func:
         try:
-            func, words = inventory_action(command, words)
+            func, words = contextual_action(command, words)
         except NotFound:
             try:
-                func, words = local_action(command, words)
+                func, words = contextual_action(command, words, local=True)
             except NotFound:
                 ...
 

@@ -1,7 +1,7 @@
-from .data.player import PLAYER, INVENTORY_ACTIONS
+from adventure.data.player import player
 
 def get_health():
-    return PLAYER["health"]
+    return player()["health"]
 
 def state(**kwargs):
     """Get or set state details"""
@@ -9,23 +9,23 @@ def state(**kwargs):
         for key in ("args", "command", "action", "item"):
             val = kwargs.pop(key, None)
             if val:
-                PLAYER["state"][key] = val
-    return PLAYER["state"]
+                player()["state"][key] = val
+    return player()["state"]
 
 def adjust_health(amount):
-    PLAYER["health"] += amount
-    if PLAYER["health"] < 0:
-        PLAYER["health"] = 0
+    player()["health"] += amount
+    if player()["health"] < 0:
+        player()["health"] = 0
 
 def is_alive():
-    return PLAYER["health"] > 0
+    return player()["health"] > 0
 
 def current_place(val=None):
     if val:
-        PLAYER["place"] = val
-    return PLAYER["place"]
+        player()["place"] = val
+    return player()["place"]
 
 def current_position(val=None):
     if val:
-        PLAYER["position"] = val
-    return PLAYER["position"]
+        player()["position"] = val
+    return player()["position"]

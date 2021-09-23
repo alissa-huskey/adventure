@@ -8,7 +8,7 @@ from console.utils import len_stripped
 
 from blessed.terminal import Terminal
 
-from . import NotFound, UserError, SilentError, Error
+from adventure import NotFound, UserError, SilentError, Error
 
 
 TERM = Terminal()
