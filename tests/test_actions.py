@@ -234,3 +234,12 @@ def test_do_pet(args, context):
     if not ex:
         assert get_health() == 100 + damage
         assert get_inventory("gems") == award
+
+
+@pytest.mark.parametrize("args", [
+    ([]),
+    (["xxx"]),
+])
+def test_do_quit(args):
+    with pytest.raises(SystemExit):
+        do_quit(*args)
