@@ -193,7 +193,6 @@ def test_do_jump(place, args, context):
     if not ex:
         current_place()["name"] == place
 
-
 @pytest.mark.parametrize("place, args, context", [
     ("home", [], does_not_raise()),
     ("home", ["xxx"], pytest.raises(UserError, match="unknown argument")),
@@ -203,3 +202,13 @@ def test_do_look(place, args, context):
 
     with context:
         do_look(*args)
+
+@pytest.mark.parametrize("place, args, context", [
+    ("home", [], does_not_raise()),
+    ("home", ["xxx"], pytest.raises(UserError, match="unknown argument")),
+])
+def test_do_map(place, args, context):
+    do_jump(place)
+
+    with context:
+        do_map(*args)

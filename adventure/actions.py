@@ -286,6 +286,7 @@ def do_look(*args):
 
 def do_map(*args):
     """Show a map"""
+    extra_args("map", args)
 
     grid = Grid()
     for place in PLACES:
