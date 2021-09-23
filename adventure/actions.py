@@ -78,9 +78,9 @@ def contextual_action(command, words, local=False):
         # item not in inventory
         if not item:
             if local:
-                error(f"({command}) There's no {args[0]} nearby.")
+                error(f"There's no {args[0]} nearby.")
             else:
-                error(f"({command}) You have no {args[0]} in your inventory.")
+                error(f"You have no {args[0]} in your inventory.")
 
         # make sure item is the first arg
         if item != args[0]:
@@ -106,22 +106,21 @@ def do_buy(name=None, *args):
     item = get_item(name)
 
     if not name in current_place()["items"]:
-        error(f"(buy) No {name} here.")
+        error(f"No {name} here.")
 
     if not item:
         error(f"Couldn't find details about: {name}", user=False)
 
     if not item.get("price"):
-        error(f"(buy) {name} is not for sale.")
+        error(f"{name} is not for sale.")
 
     if not can_afford(item["price"]):
-        error(f"(buy) Sorry, you don't have {abs(item['price'])} gems.")
+        error(f"Sorry, you don't have {abs(item['price'])} gems.")
 
     adjust_inventory(name, 1)
     adjust_inventory("gems", item["price"])
 
-    print()
-    info(f"Bought a {name} for {abs(item['price'])} gems.")
+    info(f"Bought a {name} for {abs(item['price'])} gems.", before=1)
 
 def do_consume(name=None, delay=1, *args):
     """Consume an item from inventory."""
@@ -133,7 +132,7 @@ def do_consume(name=None, delay=1, *args):
     item = get_item(name)
 
     if not item:
-        error(f"({action}) I don't know what a {name!r} is.")
+        error(f"I don't know what a {name!r} is.")
 
     if not get_inventory(name):
         error(f"Sorry, you don't have any {name} to {action}.")
@@ -150,8 +149,7 @@ def do_consume(name=None, delay=1, *args):
 
     print()
     for text in message:
-        info(text)
-        print()
+        info(text, after=1)
         time.sleep(delay)
 
     adjust_inventory(name, -1)
@@ -174,9 +172,7 @@ def do_examine(name=None, *args):
     if not (name in current_place()["items"] or get_inventory(name)):
         error(f"There is no {name!r} in {current_place()['name']}.")
 
-    print()
-    info(fx.bold(item.get("name", "Unnamed place").title()))
-    print()
+    info(fx.bold(item.get("name", "Unnamed place").title()), before=1, after=1)
     info(mergelines(item["desc"]))
 
 def do_go(direction=None, steps=1, *args):
@@ -303,11 +299,8 @@ def do_map(*args):
         except IndexError:
             error(f"Couldn't map location: {place['name']!r}, ({x=}, {y=})", user=False)
 
-    print("\n")
-    info(fx.bold("Map"))
-    print()
-    print(grid.render())
-    print()
+    info(fx.bold("Map"), before=2, after=1)
+    print(grid.render(), "\n")
 
 def do_pet(item=None, color=None, *args):
     """Pet one of the dragon heads."""
@@ -346,8 +339,7 @@ def do_pet(item=None, color=None, *args):
     amount and adjust_inventory("gems", amount)
     damage and adjust_health(damage)
 
-    print()
-    info(f"The {mood} {color} dragon {message}")
+    info(f"The {mood} {color} dragon {message}", before=1)
     return amount, damage
 
 def do_quit(*args):
@@ -376,19 +368,19 @@ def do_stats(*args):
 ## ACTIONS #######################################
 
 ACTIONS = {
-    "buy": {"func": do_buy, "place": "market"},
-    "pet": {"func": do_pet, "place": "cave"},
-    "drink": {"func": do_consume, "item": "elixr"},
-    "shop": {"func": do_shop, "place": "market"},
-    "stats": {"func": do_stats},
-    "map": {"func": do_map},
-    "inventory": {"func": do_inventory},
-    "look": {"func": do_look},
-    "examine": {"func": do_examine},
-    "go": {"func": do_go},
-    "jump": {"func": do_jump},
-    "help": {"func": do_help},
-    "quit": {"func": do_quit},
+    "buy": {"name": "buy", "func": do_buy, "place": "market"},
+    "pet": {"name": "pet", "func": do_pet, "place": "cave"},
+    "drink": {"name": "drink", "func": do_consume, "item": "elixr"},
+    "shop": {"name": "shop", "func": do_shop, "place": "market"},
+    "stats": {"name": "stats", "func": do_stats},
+    "map": {"name": "map", "func": do_map},
+    "inventory": {"name": "inventory", "func": do_inventory},
+    "look": {"name": "look", "func": do_look},
+    "examine": {"name": "examine", "func": do_examine},
+    "go": {"name": "go", "func": do_go},
+    "jump": {"name": "jump", "func": do_jump},
+    "help": {"name": "help", "func": do_help},
+    "quit": {"name": "quit", "func": do_quit},
 }
 
 # alias -> command func

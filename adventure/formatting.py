@@ -8,7 +8,8 @@ from console.utils import len_stripped
 
 from blessed.terminal import Terminal
 
-from adventure import NotFound, UserError, SilentError, Error
+from adventure import NotFound, UserError, SilentError, UnexpectedError, themes
+from adventure.player import state
 
 
 TERM = Terminal()
@@ -126,7 +127,10 @@ class Table:
                 for i in range(self.columns)
             }
         except IndexError:
-            raise Error(f"Your rows have different lengths: {list(map(len, self.rows))}")
+            error(
+                f"Your rows have different lengths: {list(map(len, self.rows))}",
+                user=False
+            )
         self._widths.update(self.sizes)
         return self._widths
 
@@ -151,17 +155,19 @@ def mergelines(text):
     joined = " ".join([x.strip() if x.strip() else "\n" for x in lines])
     return re.sub("\n ", "\n\n", joined)
 
-def info(*args):
+def info(*args, before=0, after=0):
     message = " ".join(map(str, args))
 
     lines = TERM.wrap(
         message,
-        # add to width to account for escape characters
         width=MAX,
         initial_indent='      ',
         subsequent_indent='      ',
     )
+
+    print("\n"*before, end="")
     print(*lines, sep="\n")
+    print("\n"*after, end="")
 
 def error(message="", silent=False, user=True):
     if silent:
@@ -169,16 +175,25 @@ def error(message="", silent=False, user=True):
     elif user:
         raise UserError(message)
     else:
-        raise Error(message)
+        raise UnexpectedError(message)
 
-def print_error(message):
-    print(fg.red("!"), message, file=stderr)
+def print_error(err):
+    parts = [fg.red("!"), err.message]
+    if err.cmd:
+        parts.insert(1, fg.red(f"{err.cmd}>"))
+    print(*parts, file=stderr)
 
 def debug(*args, **kwargs):
     if not DEBUG:
         return
 
+    action = state().get("action")
+
     message = "# "
+
+    if action:
+        message += f"{action}> "
+
     message += " ".join(args)
     message += " ".join([f"{fx.dim}{fg.yellow}{k}{fx.end}{fx.dim}: {v!r}{fx.end}" for k,v in kwargs.items()])
 

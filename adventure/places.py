@@ -2,7 +2,7 @@ import re
 
 from console import fg
 
-from adventure.formatting import info, error, mergelines
+from adventure.formatting import info, mergelines
 from adventure.player import current_position, current_place
 from adventure.data.places import (
     COMPASS,
@@ -24,9 +24,7 @@ def show(place, long=False):
         long (bool, default=False): print the long description
     """
 
-    print()
-    info(themes.title(place.get("name", "Unnamed location").title()))
-    print()
+    info(themes.title(place.get("name", "Unnamed location").title()), before=1, after=1)
 
     items = place.get("items", [])
     actions = place.get("actions", [])
@@ -51,8 +49,7 @@ def show(place, long=False):
                 desc,
                 flags=re.IGNORECASE,
             )
-        info(mergelines(desc))
-        print()
+        info(mergelines(desc), after=1)
 
     for letter, desc in place["look"].items():
         if not desc: continue

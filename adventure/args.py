@@ -1,4 +1,5 @@
 from adventure.formatting import error
+from adventure.player import state
 
 def extra_args(cmd, args):
     if not args:
@@ -16,12 +17,12 @@ def validate(cmd, val, name, choices=[], options=[], klass=None):
         try:
             val = klass(val)
         except (TypeError, ValueError):
-            error(f"({cmd}) {name} should be a {klass.__name__}. got: {val!r}")
+            error(f"{name} should be a {klass.__name__}. got: {val!r}")
 
     # check for valid option
     if (choices or options) and \
             val.lower() not in [str(x).lower() for x in list(choices)+list(options)]:
-            error(f'({cmd}) {name} invalid: {val!r} ({", ".join(choices)})')
+            error(f'{name} invalid: {val!r} ({", ".join(choices)})')
 
     return val
 

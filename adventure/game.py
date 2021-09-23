@@ -3,6 +3,7 @@
 import shlex
 from pprint import pprint
 
+from adventure.player import state
 from adventure.places import COMPASS_OPTIONS
 from adventure.inventory import get_inventory
 from adventure.formatting import (
@@ -25,7 +26,7 @@ from adventure.actions import (
     ACTIONS
 )
 from adventure import (
-    Error,
+    UnexpectedError,
     NotFound,
     UserError,
     SilentError,
@@ -76,7 +77,7 @@ def parse(response):
     if not words:
         error(silent=True)
 
-    state(command=words[0], args=words[1:])
+    state(command=words[0], args=words[1:], action=None)
 
     getters = [
         func_from_compass,
@@ -102,6 +103,10 @@ def parse(response):
         error(f"No such command: {command!r}")
 
     state(args=words)
+
+    if action:
+        state(action=action["name"])
+
     return (func, words)
 
 def main():
@@ -120,11 +125,8 @@ def main():
             cmd(*args)
         except SilentError:
             continue
-        except Error as err:
-            msg = err.args[0]
-            print_error(f"Something went wrong: {msg}")
-        except UserError as err:
-            print_error(err.args[0])
+        except (UnexpectedError, UserError) as err:
+            print_error(err)
         finally:
             print()
             hr(char="~")

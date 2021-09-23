@@ -2,11 +2,10 @@
 2021-09-21 add docstrings @housekeeping
 2021-09-21 add tests @housekeeping
 2021-09-21 add do_take and do_drop  @feature
-2021-09-21 modify UserError to take a command @housekeeping
+x 2021-09-23 2021-09-21 modify UserError to take a command @housekeeping
 2021-09-21 descriptions for courtyard items @narrative
 2021-09-21 multi-word tokens @feature
 2021-09-21 legend of dragons in book @narrative
-x 2021-09-23 2021-09-21 remove direction argument from do_look @features
 2021-09-21 description for path items @narrative
 2021-09-21 road description @narrative
 2021-09-21 cave description @narrative
@@ -25,3 +24,5 @@ x 2021-09-23 2021-09-21 remove direction argument from do_look @features
 2021-09-22 add price to examine if in market @feature
 2021-09-22 add quantity to examine if it's an inventory item @feature
 2021-09-22 show alias(es) in help @feature
+2021-09-23 refactor contextual_action, perhaps just validation now @housekeeping
+2021-09-23 generate ACTIONS dicts from items and places @housekeeping

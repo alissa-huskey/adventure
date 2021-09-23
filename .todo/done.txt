@@ -19,3 +19,4 @@ x 2021-09-22 2021-09-21 market description @narrative
 x 2021-09-22 2021-09-22 unify inventory_action and local_action @houskeeping
 x 2021-09-22 2021-09-21 make current place bold on map @feature
 x 2021-09-23 2021-09-21 remove direction argument from do_look @features
+x 2021-09-23 2021-09-21 modify UserError to take a command @housekeeping
