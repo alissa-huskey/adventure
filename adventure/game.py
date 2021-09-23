@@ -60,6 +60,8 @@ def show(place, long=False):
     print()
 
     items = place.get("items", [])
+    actions = place.get("actions", [])
+
     if long or not place.get("visited"):
         desc = place.get("description")
     else:
@@ -70,6 +72,13 @@ def show(place, long=False):
             desc = re.sub(
                 rf'\b({"|".join(items)})\b',
                 rf'{themes.items}\1{fg.default}',
+                desc,
+                flags=re.IGNORECASE,
+            )
+        if actions:
+            desc = re.sub(
+                rf'\b({"|".join(actions)})\b',
+                rf'{themes.cmd}\1{fg.default}',
                 desc,
                 flags=re.IGNORECASE,
             )

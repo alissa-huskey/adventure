@@ -91,7 +91,10 @@ PLACES = [
     {
         "name": "market",
         "position": (2, 1),
-        "description": "",
+        "description": """
+            A tidy store with shelves full of goods to buy.
+            You've heard this is a good place to shop.
+        """,
         "look": {
             "N": None,
             "E": None,

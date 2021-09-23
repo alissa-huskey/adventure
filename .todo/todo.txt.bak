@@ -9,7 +9,6 @@
 2021-09-21 legend of dragons in book @narrative
 2021-09-21 remove direction argument from do_look @features
 2021-09-21 description for path items @narrative
-2021-09-21 market description @narrative
 2021-09-21 road description @narrative
 2021-09-21 cave description @narrative
 2021-09-21 add delay for effect with time.sleep in do_pet @feature
@@ -24,3 +23,6 @@
 2021-09-22 read from stdin @feature
 2021-09-22 add delayed steps when petting the dragon @feature @narrative
 2021-09-22 remove some items from the shop when bought @feature
+2021-09-22 fancier inventory display @feature
+2021-09-22 unify inventory_action and local_action @houskeeping
+2021-09-22 add price to examine if in market @feature

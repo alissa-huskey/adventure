@@ -13,6 +13,8 @@ from . import NotFound, UserError, SilentError, Error
 
 TERM = Terminal()
 WIDTH = 60
+MARGIN = 3
+MAX=WIDTH-MARGIN
 DEBUG = False
 
 
@@ -137,7 +139,7 @@ class Table:
 
 def bar(title, val):
 
-    pb = Bar(width=WIDTH-len(title)-2)
+    pb = Bar(width=MAX-len(title)-2)
     print(f"{title.title()} {pb(val-1)}")
 
 def hr(char="=", width=WIDTH, margin=""):
@@ -155,7 +157,7 @@ def info(*args):
     lines = TERM.wrap(
         message,
         # add to width to account for escape characters
-        width=WIDTH,
+        width=MAX,
         initial_indent='      ',
         subsequent_indent='      ',
     )
