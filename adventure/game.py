@@ -10,7 +10,7 @@ from .items import get_item
 from .args import require, validate, extra_args
 from .actions import local_action, inventory_action
 from .help import get_help, COMMANDS
-from .inventory import get_all_inventory, get_inventory
+from .inventory import get_all_inventory, get_inventory, adjust_inventory
 from .places import (
     COMPASS,
     COMPASS_OPTIONS,

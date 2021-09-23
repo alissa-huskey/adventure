@@ -10,10 +10,18 @@
 2021-09-21 remove direction argument from do_look @features
 2021-09-21 description for path items @narrative
 2021-09-21 market description @narrative
-2021-09-21 market items description @narrative
 2021-09-21 road description @narrative
 2021-09-21 cave description @narrative
 2021-09-21 add delay for effect with time.sleep in do_pet @feature
 2021-09-21 multiple item tokens (ie ['stick', 'walking-stick']) @feature
 2021-09-22 move INVENTORY_ACTIONS to data/inventory.py @housekeeping
 2021-09-22 add health to do_stats @feature
+2021-09-22 don't let health go above 100 @feature
+2021-09-22 don't let the user keep petting the dragon @feature
+2021-09-22 save and load player state @feature
+2021-09-22 help for local and inventory commands @feature
+2021-09-22 list commands @feature
+2021-09-22 read from stdin @feature
+2021-09-22 add delayed steps when petting the dragon @feature @narrative
+2021-09-22 remove some items from the shop when bought @feature
+2021-09-22 fancier inventory display @feature

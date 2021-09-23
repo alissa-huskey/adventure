@@ -29,8 +29,19 @@ example games
 * [textgame](https://github.com/davekch/textgame/blob/master/example.py)
 * [The Magic Circle](https://playfic.com/games/patcrosmun/the-magic-circle)
 
-
 unrelated, but fun:
 
 [Choice of Dragons](https://www.choiceofgames.com/dragon/)
 
+Inspiration
+-----------
+
+* [RPG MO > Inventory](https://rpg-mo.fandom.com/wiki/Inventory)
+* [Your Common RPG Items](https://www.rpgmakercentral.com/topic/18955-your-common-rpg-items/)
+* [RPG Weapons](https://driftwood.tripod.com/rpg/weapons.html)
+
+
+* [Mercenary Holbein Dagger](https://www.reliks.com/functional-daggers/mercenary-holbein-dagger/)
+* [Runic Long Seax](https://www.reliks.com/functional-daggers/runic-long-seax/)
+* [twisted steel scottish dirk](https://www.budk.com/Twisted-Steel-Scottish-Dirk-Knife-14912)
+* [Twisted Celtic dagger](https://www.budk.com/Twisted-Celtic-Dagger-With-Sheath-%E2%80%93-Stainless-Stee-43360)

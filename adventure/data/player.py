@@ -5,7 +5,7 @@ PLAYER = {
     "place": None,
     "health": 100,
     "inventory": defaultdict(int,
-        gems=10,
+        gems=0,
     ),
     "state": {
         "command": None,

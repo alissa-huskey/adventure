@@ -14,3 +14,4 @@ x 2021-09-21 2021-09-21 move dictionaries into adventure/data @housekeeping
 x 2021-09-22 2021-09-21 move inventory functions to inventory.py @housekeeping
 x 2021-09-22 2021-09-21 figure out a way to examine inventory items ("inventory thing", "get thing"?)  @feature
 x 2021-09-22 2021-09-22 test that x item works for inventory items not in room @feature
+x 2021-09-22 2021-09-21 market items description @narrative

@@ -43,6 +43,52 @@ items
 - bottle
 - magic box - sword, wand, daggar
 - Nach dem Spiel ist vor dem Spiel.
+- crystal ball
+- amethyst necklace
+- divining rod
+- rune stones
+
+
+- fruit
+- candle
+- pick
+- chains
+- dagger
+- hocho
+- amphora
+- crystal_ball
+- telescope
+- broom
+- basket
+- key
+- old_key
+- bellhop_bell
+- dolls
+- open_book
+- scissors
+- lock, unlock, closed_lock_with_key
+- fountain_pen, black_nib, pen
+- paintbrush
+- bell
+- ring
+- mirror
+- tea
+- hourglass
+- firecracker
+- crystal_ball
+- teddy_bear
+- thread
+- sewing_needle
+- oil lamp (🪔)
+- candle
+- open_book
+- page_with_curl
+- scroll
+- axe (🪓)
+- alembic
+- telescope
+- drop of blood (🩸)
+- chair (🪑)
 
 actions
 -------

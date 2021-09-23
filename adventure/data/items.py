@@ -63,12 +63,40 @@ ITEMS = {
         "desc": "a fancy cloak",
     },
     "elixr": {
-        "name": "elixr",
-        "desc": "a healing elixr",
+        "name": "healing elixr",
+        "desc": "A small corked bottle filled with a swirling green liquid.",
         "price": -10,
-        "health": 5,
+        "health": 15,
         "actions": ["drink"],
-        "consume-msg": "the tasty beverage"
+        "consume-msg": [
+            "You uncork the bottle.",
+            "The swirling green liquid starts to bubble.",
+            "You hesitatingly bring the bottle to your lips...",
+            "then quickly down the whole thing!",
+            "Surprisingly, it tastes like blueberries.",
+            "You feel an odd tingling sensation starting at the top of your head... ",
+            "...moving down your body...",
+            "...down to the tips of your toes.",
+        ],
+        "icon": "🍵",
+    },
+    "crystal ball": {
+        "name": "crystal ball",
+        "price": -15,
+        "desc": """
+            A transparent sphere about the size of your palm that glows softly.  It is
+            said to have magical properties.
+        """,
+        "icon": "🔮",
+    },
+    "dagger": {
+        "name": "dagger",
+        "price": -22,
+        "desc": """
+            A double-edged 14 inch dagger with a crescent shaped hardwood grip, metal
+            crossguard, and curved studded metal pommel.
+        """,
+        "icon": "🗡    ",
     },
     "bench": {
         "name": "bench",

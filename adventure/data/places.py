@@ -98,9 +98,10 @@ PLACES = [
             "S": "cobblestone path into town",
             "W": None,
         },
-        "items": ["elixr", "cloak"],
+        "items": ["elixr", "crystal ball", "dagger"],
         "actions": {
-            "buy": {"elixr", "cloak"},
+            "buy": {"elixr", "crystal ball", "dagger"},
+            "shop": {},
         },
     },
     {

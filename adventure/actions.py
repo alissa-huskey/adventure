@@ -1,4 +1,5 @@
 import random
+import time
 
 from more_itertools import first
 
@@ -18,9 +19,12 @@ ACTIONS = {}
 
 
 def get_action(name):
-    return ACTIONS[name]
+    return ACTIONS.get(name)
 
 def inventory_action(command, words):
+    """Return command function, and args from actions available on inventory items
+    associated with the current command, or raise NotFound error.
+    """
     args = words[:]
     items = inventory_for_action(command)
     item = first(items.intersection(args), None)
@@ -30,18 +34,21 @@ def inventory_action(command, words):
     if not items:
         raise NotFound()
 
-    # missing required item for action
-    if not args:
-        error(f'You need to say what you want to {command}.')
+    # item is required
+    if items:
 
-    # item not in inventory
-    if not item:
-        error(f"({command}) You have no {args[0]} in your inventory.")
+        # missing required item for action
+        if not args:
+            error(f'You need to say what you want to {command}.')
 
-    # make sure item is the first arg
-    if item and item != args[0]:
-        args.remove(item)
-        args.insert(0, item)
+        # item not in inventory
+        if not item:
+            error(f"({command}) You have no {args[0]} in your inventory.")
+
+        # make sure item is the first arg
+        if item and item != args[0]:
+            args.remove(item)
+            args.insert(0, item)
 
     return (get_action(command), args)
 
@@ -53,30 +60,33 @@ def local_action(command, words):
     args = words[:]
     place = current_place()
     items = place["actions"].get(command, set())
-    item = first(items.intersection(args), None)
-    state(item=item)
 
     # no such action at this place
     if command not in place["actions"]:
         raise NotFound()
 
-    # missing required item for action
-    if items and not args:
-        error(f'You need to say what you want to {command}.')
+    # if item is required
+    if items:
+        item = first(items.intersection(args), None)
+        state(item=item)
 
-    # no valid item for this action
-    if items and not item:
-        error(f"({command}) There's no {args[0]} nearby.")
+        # missing required item for action
+        if items and not args:
+            error(f'You need to say what you want to {command}.')
 
-    # make sure item is the first arg
-    if item and item != args[0]:
-        args.remove(item)
-        args.insert(0, item)
+        # no valid item for this action
+        if items and not item:
+            error(f"({command}) There's no {args[0]} nearby.")
+
+        # make sure item is the first arg
+        if item and item != args[0]:
+            args.remove(item)
+            args.insert(0, item)
 
     return (get_action(command), args)
 
 def do_pet(item=None, color=None, *args):
-    """."""
+    """Pet one of the dragon heads."""
     color = require("pet", color, "color", choices=COLORS)
 
     random.shuffle(COLORS)
@@ -107,7 +117,7 @@ def do_pet(item=None, color=None, *args):
     info(f"The {mood} {color} dragon {message}")
 
 def do_buy(name=None, *args):
-    """."""
+    """Buy an item from the market."""
     require("buy", name, "item")
     place = current_place()
     item = get_item(name)
@@ -131,6 +141,7 @@ def do_buy(name=None, *args):
     info(f"Bought a {name} for {abs(item['price'])} gems.")
 
 def do_consume(name=None, *args):
+    """Consume an item from inventory."""
     action = state()["command"]
     require(action, name, "item")
 
@@ -144,20 +155,41 @@ def do_consume(name=None, *args):
         info(f"Sorry, you don't have any {name} to {action}.")
 
     health_points = item.get("health")
-    message = f"You {action} the {name}"
+    message = item.get("consume-msg", [])
 
-    adjust_inventory(name, -1)
+    if not message:
+        message.append(f"You {action} the {name}.")
 
     if health_points:
         adjust_health(health_points)
-        message += f" and gain {health_points} health"
+        message.append(f"\n You gain {health_points} health.")
 
     print()
-    info(f"{message}.")
+    for text in message:
+        info(text)
+        print()
+        time.sleep(1)
+
+    adjust_inventory(name, -1)
+
+def do_shop(*args):
+    """Shop in the market."""
+    market = current_place()
+    if market["name"] != "market":
+        error("Cannot shop unless in the market.", user=False)
+
+    print()
+    for item in (get_item(name) for name in market["items"]):
+        info(
+            item["icon"].ljust(4),
+            item["name"].capitalize().ljust(30),
+            abs(item["price"]),
+        )
 
 
 ACTIONS = {
     "buy": do_buy,
     "pet": do_pet,
     "drink": do_consume,
+    "shop": do_shop,
 }
