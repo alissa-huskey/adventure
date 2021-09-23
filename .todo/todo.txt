@@ -6,7 +6,6 @@
 2021-09-21 descriptions for courtyard items @narrative
 2021-09-21 multi-word tokens @feature
 2021-09-21 legend of dragons in book @narrative
-2021-09-21 remove direction argument from do_look @features
 2021-09-21 description for path items @narrative
 2021-09-21 road description @narrative
 2021-09-21 cave description @narrative

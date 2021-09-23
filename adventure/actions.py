@@ -278,29 +278,11 @@ def do_jump(name=None, *args):
 
     show(current_place())
 
-def do_look(direction=None, *args):
+def do_look(*args):
     """Describe the scenery in the direction the player looks."""
-    validate("look", direction, "direction", choices=["around"]+list(COMPASS.values()),
-            options=["a"]+COMPASS_OPTIONS)
     extra_args("look", args)
 
-    place = current_place()
-
-    if not direction:
-        show(place, long=True)
-        return
-
-    if direction.strip().lower() == "around":
-        items = place["items"] or None
-        if items:
-            info("You see " + ", ".join([str(fx.bold(o)) for o in items]) + ".")
-        return
-
-    lookto = direction[0].upper()
-
-    desc = place["look"][lookto] or "empty space"
-    print()
-    info(f"To the {get_direction(direction)} you see {desc}.")
+    show(current_place(), long=True)
 
 def do_map(*args):
     """Show a map"""
