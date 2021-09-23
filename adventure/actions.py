@@ -158,18 +158,19 @@ def do_examine(name=None, *args):
     """Look at an item in the current place or in inventory."""
 
     require("examine", name, "item")
-    extra_args("look", args)
+    extra_args("examine", args)
 
     if name in ["self", "me"]:
         do_stats()
         return
 
     item = get_item(name)
-    if not (name in current_place()["items"] or get_inventory(name)):
-        error(f"There is no {name} in {current_place()['name']}.")
 
     if not item:
-        error(f"Can't find details about: {name!r}")
+        error(f"I don't know what a {name!r} is")
+
+    if not (name in current_place()["items"] or get_inventory(name)):
+        error(f"There is no {name!r} in {current_place()['name']}.")
 
     print()
     info(fx.bold(item.get("name", "Unnamed place").title()))

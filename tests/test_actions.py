@@ -130,3 +130,21 @@ def test_do_consume(item, args, amount, context):
 
     if not ex:
         assert not get_inventory(item)
+@pytest.mark.parametrize("place, amount, item, args, context", [
+    ("home", 0, None, [], pytest.raises(UserError, match="examine needs a item")),
+    ("home", 0, "bed", [], does_not_raise()),
+    ("home", 0, "me", [], does_not_raise()),
+    ("home", 0, "bed", ["xxx"], pytest.raises(UserError, match="examine received unknown arguments")),
+    ("home", 1, "elixr", [], does_not_raise()),
+    ("home", 0, "elixr", [], pytest.raises(UserError, match="There is no 'elixr' in home")),
+    ("home", 0, "xxx", [], pytest.raises(UserError, match="I don't know what a 'xxx' is")),
+    ("home", 0, "dragon", [], pytest.raises(UserError, match="There is no 'dragon' in home")),
+])
+def test_do_examine(place, amount, item, args, context):
+    do_jump(place)
+
+    if amount:
+        adjust_inventory(item, abs(amount))
+
+    with context as ex:
+        do_examine(item, *args)
