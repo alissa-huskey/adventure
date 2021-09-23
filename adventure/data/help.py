@@ -100,7 +100,19 @@ COMMANDS = [
         },
     },
     {
+        "name": "map",
+        "listed": False,
+        "description": "show the map",
+        "examples": [],
+        "aliases": ["m"],
+        "arguments": {
+            "required": {},
+            "optional": {},
+        },
+    },
+    {
         "name": "jump",
+        "listed": False,
         "description": "jump to a particular place",
         "examples": ["jump home", "j home"],
         "aliases": ["j"],

@@ -26,3 +26,4 @@
 2021-09-22 fancier inventory display @feature
 2021-09-22 unify inventory_action and local_action @houskeeping
 2021-09-22 add price to examine if in market @feature
+2021-09-22 add quantity to examine if it's an inventory item @feature
