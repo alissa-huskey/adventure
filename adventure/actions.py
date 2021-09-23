@@ -42,28 +42,159 @@ from adventure import themes
 
 ACTIONS = {}
 
-def do_map(*args):
-    grid = Grid()
-    for place in PLACES:
-        x, y = place.get("position")
-        name = place.get("name", "")
+## functions ####################################
 
-        if current_place() == place:
-            name = fx.bold(name)
-        try:
-            debug(f"place: {place['name']!r}, ({x=}, {y=})")
-            grid.set(y, x, name)
-        except IndexError:
-            error(f"Couldn't map location: {place['name']!r}, ({x=}, {y=})")
+def contextual_action(command, words, local=False):
+    """Return command function, and args from actions available based on context or
+       raise NotFound error. Either actions for a specific place if local, or actions for
+       an item in inventory.
+    """
+    args = words[:]
 
-    print("\n")
-    info(fx.bold("Map"))
+    if local:
+        place = current_place()
+        items = place["actions"].get(command, set())
+
+        # no such action at this place
+        if command not in place["actions"]:
+            raise NotFound()
+    else:
+        items = inventory_for_action(command)
+
+        # no such inventory action
+        if not items:
+            raise NotFound()
+
+    # item is required
+    if items:
+
+        item = first(items.intersection(args), None)
+        state(item=item)
+
+        # missing required item for action
+        if not args:
+            error(f'You need to say what you want to {command}.')
+
+        # item not in inventory
+        if not item:
+            if local:
+                error(f"({command}) There's no {args[0]} nearby.")
+            else:
+                error(f"({command}) You have no {args[0]} in your inventory.")
+
+        # make sure item is the first arg
+        if item != args[0]:
+            args.remove(item)
+            args.insert(0, item)
+
+    return (get_action(command), args)
+
+def get_action(name):
+    """Return the command function for a particular name or alias"""
+    return ACTIONS.get(name)
+
+## action functions #############################
+
+def do_buy(name=None, *args):
+    """Buy an item from the market."""
+    require("buy", name, "item")
+    extra_args("buy", args)
+
+    place = current_place()
+    item = get_item(name)
+
+    if not name in current_place()["items"]:
+        error(f"(buy) No {name} here.")
+
+    if not item:
+        error(f"Couldn't find details about: {name}", user=False)
+
+    if not item.get("price"):
+        error(f"(buy) {name} is not for sale.")
+
+    if not can_afford(item["price"]):
+        error(f"(buy) Sorry, you don't have {abs(item['price'])} gems.")
+
+    adjust_inventory(name, 1)
+    adjust_inventory("gems", item["price"])
+
     print()
-    print(grid.render())
-    print()
+    info(f"Bought a {name} for {abs(item['price'])} gems.")
 
-def do_quit(*args):
-    quit()
+def do_consume(name=None, delay=1, *args):
+    """Consume an item from inventory."""
+    action = state()["command"]
+
+    require(action, name, "item")
+    extra_args(action, args)
+
+    item = get_item(name)
+
+    if not item:
+        error(f"({action}) I don't know what a {name!r} is.")
+
+    if not get_inventory(name):
+        error(f"Sorry, you don't have any {name} to {action}.")
+
+    health_points = item.get("health")
+    message = item.get("consume-msg", [])
+
+    if not message:
+        message.append(f"You {action} the {name}.")
+
+    if health_points:
+        adjust_health(health_points)
+        message.append(f"\n You gain {health_points} health.")
+
+    print()
+    for text in message:
+        info(text)
+        print()
+        time.sleep(delay)
+
+    adjust_inventory(name, -1)
+
+def do_examine(name=None, *args):
+    """Look at an item in the current place or in inventory."""
+
+    require("examine", name, "item")
+    extra_args("look", args)
+
+    if name in ["self", "me"]:
+        do_stats()
+        return
+
+    item = get_item(name)
+    if not (name in current_place()["items"] or get_inventory(name)):
+        error(f"There is no {name} in {current_place()['name']}.")
+
+    if not item:
+        error(f"Can't find details about: {name!r}")
+
+    print()
+    info(fx.bold(item.get("name", "Unnamed place").title()))
+    print()
+    info(mergelines(item["desc"]))
+
+def do_go(direction=None, steps=1, *args):
+    """Move the player to a new position based on the direction they wish to
+    travel."""
+    direction = require("go", direction, "direction", choices=COMPASS.values(),
+                        options=COMPASS_OPTIONS)
+    steps = require("go", steps, "steps", klass=int)
+    extra_args("go", args)
+
+    pos = step(current_position(), direction, steps)
+    if goto(pos):
+        show(current_place())
+    else:
+        error("You can't go that way.")
+
+def do_inventory(*args):
+    """Show inventory"""
+    print()
+    for item, amount in get_all_inventory().items():
+        info(f"({amount: >3}) {item}")
 
 def do_help(command=None, *args):
     # list help topics
@@ -125,6 +256,16 @@ def do_help(command=None, *args):
     for t in tables:
         print(t.text)
 
+def do_jump(place=None, *args):
+    """Jump straight to a place"""
+    require("jump", place, "place")
+    extra_args("jump", args)
+
+    place = get_place(place)
+
+    if goto(place["position"]):
+        show(current_place())
+
 def do_look(direction=None, *args):
     """Describe the scenery in the direction the player looks."""
     validate("look", direction, "direction", choices=["around"]+list(COMPASS.values()),
@@ -149,110 +290,27 @@ def do_look(direction=None, *args):
     print()
     info(f"To the {get_direction(direction)} you see {desc}.")
 
-def do_examine(name=None, *args):
-    """Look at an item in the current place or in inventory."""
+def do_map(*args):
+    """Show a map"""
 
-    require("examine", name, "item")
-    extra_args("look", args)
+    grid = Grid()
+    for place in PLACES:
+        x, y = place.get("position")
+        name = place.get("name", "")
 
-    if name in ["self", "me"]:
-        do_stats()
-        return
+        if current_place() == place:
+            name = fx.bold(name)
+        try:
+            debug(f"place: {place['name']!r}, ({x=}, {y=})")
+            grid.set(y, x, name)
+        except IndexError:
+            error(f"Couldn't map location: {place['name']!r}, ({x=}, {y=})", user=False)
 
-    item = get_item(name)
-    if not (name in current_place()["items"] or get_inventory(name)):
-        error(f"There is no {name} in {current_place()['name']}.")
-
-    if not item:
-        error(f"Can't find details about: {name!r}")
-
+    print("\n")
+    info(fx.bold("Map"))
     print()
-    info(fx.bold(item.get("name", "Unnamed place").title()))
+    print(grid.render())
     print()
-    info(mergelines(item["desc"]))
-
-def do_jump(place=None, *args):
-    """Jump straight to a place"""
-    require("jump", place, "place")
-    extra_args("jump", args)
-
-    place = get_place(place)
-
-    if goto(place["position"]):
-        show(current_place())
-
-def do_go(direction=None, steps=1, *args):
-    """Move the player to a new position based on the direction they wish to
-    travel."""
-    direction = require("go", direction, "direction", choices=COMPASS.values(),
-                        options=COMPASS_OPTIONS)
-    steps = require("go", steps, "steps", klass=int)
-    extra_args("go", args)
-
-    pos = step(current_position(), direction, steps)
-    if goto(pos):
-        show(current_place())
-    else:
-        error("You can't go that way.")
-
-def do_inventory(*args):
-    """Show inventory"""
-    print()
-    for item, amount in get_all_inventory().items():
-        info(f"({amount: >3}) {item}")
-
-def do_stats(*args):
-    """Show player stats"""
-    print()
-    bar("health", get_health())
-
-def get_action(name):
-    return ACTIONS.get(name)
-
-def contextual_action(command, words, local=False):
-    """Return command function, and args from actions available based on context or
-       raise NotFound error. Either actions for a specific place if local, or actions for
-       an item in inventory.
-    """
-    args = words[:]
-
-    if local:
-        place = current_place()
-        items = place["actions"].get(command, set())
-
-        # no such action at this place
-        if command not in place["actions"]:
-            raise NotFound()
-    else:
-        items = inventory_for_action(command)
-
-        # no such inventory action
-        if not items:
-            raise NotFound()
-
-    # item is required
-    if items:
-
-        item = first(items.intersection(args), None)
-        state(item=item)
-
-        # missing required item for action
-        if not args:
-            error(f'You need to say what you want to {command}.')
-
-        # item not in inventory
-        if not item:
-            if local:
-                error(f"({command}) There's no {args[0]} nearby.")
-            else:
-                error(f"({command}) You have no {args[0]} in your inventory.")
-
-        # make sure item is the first arg
-        if item != args[0]:
-            args.remove(item)
-            args.insert(0, item)
-
-    return (get_action(command), args)
 
 def do_pet(item=None, color=None, *args):
     """Pet one of the dragon heads."""
@@ -285,61 +343,8 @@ def do_pet(item=None, color=None, *args):
     print()
     info(f"The {mood} {color} dragon {message}")
 
-def do_buy(name=None, *args):
-    """Buy an item from the market."""
-    require("buy", name, "item")
-    place = current_place()
-    item = get_item(name)
-
-    if not name in current_place()["items"]:
-        error(f"(buy) No {name} here.")
-
-    if not item:
-        error(f"Couldn't find details about: {name}", user=False)
-
-    if not item.get("price"):
-        error(f"(buy) {name} is not for sale.")
-
-    if not can_afford(item["price"]):
-        error(f"(buy) Sorry, you don't have {abs(item['price'])} gems.")
-
-    adjust_inventory(name, 1)
-    adjust_inventory("gems", item["price"])
-
-    print()
-    info(f"Bought a {name} for {abs(item['price'])} gems.")
-
-def do_consume(name=None, *args):
-    """Consume an item from inventory."""
-    action = state()["command"]
-    require(action, name, "item")
-
-    item = get_item(name)
-
-    if not item:
-        error(f"({action}) Unable to find details about item: {item}",
-                  user=False)
-
-    if not get_inventory(name):
-        info(f"Sorry, you don't have any {name} to {action}.")
-
-    health_points = item.get("health")
-    message = item.get("consume-msg", [])
-
-    if not message:
-        message.append(f"You {action} the {name}.")
-
-    if health_points:
-        adjust_health(health_points)
-        message.append(f"\n You gain {health_points} health.")
-
-    print()
-    for text in message:
-        info(text)
-        print()
-        time.sleep(1)
-
-    adjust_inventory(name, -1)
+def do_quit(*args):
+    quit()
 
 def do_shop(*args):
     """Shop in the market."""
@@ -354,6 +359,13 @@ def do_shop(*args):
             item["name"].capitalize().ljust(30),
             abs(item["price"]),
         )
+
+def do_stats(*args):
+    """Show player stats"""
+    print()
+    bar("health", get_health())
+
+## ACTIONS #######################################
 
 
 ACTIONS = {

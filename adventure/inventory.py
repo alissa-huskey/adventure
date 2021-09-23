@@ -20,8 +20,9 @@ def remove_inventory_action(name):
     item = get_item(name)
     if not item:
         return
+
     for action in item.get("actions", []):
-        all_inventory_actions()[action].remove(name)
+        all_inventory_actions().get(action, set()).clear()
 
 def adjust_inventory(name, amount):
     """Add to amount to players inventory name, and update the list of available for
