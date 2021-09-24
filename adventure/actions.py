@@ -192,11 +192,16 @@ def do_examine(name=None, *args):
     if price and current_place()["name"] == "market":
         details = f"{abs(price)} gems"
 
+    icon = item.get("icon", "")
+    if icon:
+        icon = icon.ljust(4)
+
     title = item.get("name", "Unnamed place")
+
     info(
-        item.get("icon", "").ljust(4),
+        icon,
         fx.bold(title.title()) + \
-        details.rjust(MAX-len(title)-5),
+        details.rjust(MAX-len(title)-len(icon)),
         before=1,
         after=1,
         sep="",
