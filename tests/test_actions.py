@@ -4,7 +4,7 @@ import pytest
 
 from adventure.inventory import adjust_inventory, get_inventory
 from adventure import NotFound, UserError
-from adventure.player import state, current_place, get_health
+from adventure.player import state, current_place, get_health, adjust_health
 from adventure.actions import (
     contextual_action,
     get_action,
@@ -98,6 +98,16 @@ def test_do_buy(item, args, amount, context):
         assert get_inventory(item)
         assert not get_inventory("gems")
 
+def test_do_drink_elixr_when_healthy():
+    adjust_health(100)
+    adjust_inventory("elixr", 1)
+    state(command="drink")
+
+    with pytest.raises(UserError, match="Don't drink the elixr when you're healthy!") as ex:
+        do_consume("elixr", delay=0)
+
+    assert get_inventory("elixr") == 1
+
 @pytest.mark.parametrize("item, args, amount, context", [
     ("elixr", [], 1, does_not_raise()),
     (None, [], 0, pytest.raises(UserError, match="drink needs a item")),
@@ -106,6 +116,7 @@ def test_do_buy(item, args, amount, context):
     ("xxx", [], 0, pytest.raises(UserError, match="I don't know what a 'xxx' is")),
 ])
 def test_do_consume(item, args, amount, context):
+    adjust_health(-50)
     if amount:
         adjust_inventory(item, abs(amount))
 

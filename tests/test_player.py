@@ -9,6 +9,7 @@ from adventure.player import (
     load_game,
     save_game,
     player,
+    adjust_health,
 )
 
 @pytest.fixture
@@ -56,3 +57,14 @@ def test_load_game(saved_game, tmp_path):
 
     with shelve.open(str(data["path"])) as data:
         assert player().get("name") == "test-save"
+
+@pytest.mark.parametrize("start, amount, result", [
+    (90, 22, 100),
+    (10, -12, 0),
+    (50, 10, 60),
+    (50, -10, 40),
+])
+def test_adjust_health(start, amount, result):
+    player()["health"] = start
+    adjust_health(amount)
+    assert player()["health"] == result

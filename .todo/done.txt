@@ -26,3 +26,4 @@ x 2021-09-24 2021-09-23 add icon to examine @feature
 x 2021-09-24 2021-09-22 add quantity to examine if it's an inventory item @feature
 x 2021-09-24 2021-09-22 add price to examine if in market @feature
 x 2021-09-24 2021-09-22 save and load player state @feature
+x 2021-09-24 2021-09-22 don't let health go above 100 @feature

@@ -46,9 +46,12 @@ def save_game(datadir=DATADIR, name=None):
     return path
 
 def adjust_health(amount):
+    """Add the following (positive or negative) amount to health, but limit to 0-100"""
     player()["health"] += amount
     if player()["health"] < 0:
         player()["health"] = 0
+    if player()["health"] > 100:
+        player()["health"] = 100
 
 def is_alive():
     return player()["health"] > 0

@@ -10,9 +10,8 @@
 (B) 2021-09-21 cave description @narrative
 2021-09-21 add delay for effect with time.sleep in do_pet @feature
 (A) 2021-09-21 multiple item tokens (ie ['stick', 'walking-stick']) @feature
-(A) 2021-09-22 don't let health go above 100 @feature
+x 2021-09-24 2021-09-22 don't let health go above 100 @feature
 2021-09-22 don't let the user keep petting the dragon @feature
-x 2021-09-24 2021-09-22 save and load player state @feature
 2021-09-22 help for local and inventory commands @feature
 2021-09-22 list commands @feature
 2021-09-22 read from stdin @feature
@@ -22,6 +21,6 @@ x 2021-09-24 2021-09-22 save and load player state @feature
 2021-09-23 refactor contextual_action, perhaps just validation now @housekeeping
 2021-09-23 generate ACTIONS dicts from items and places @housekeeping
 2021-09-23 test on windows @housekeeping
-2021-09-24 take argument of saved file to load @feature
+2021-09-24 take argument of saved file to load @housekeeping
 2021-09-24 fix "pet red head" command @bugfix
 2021-09-24 move visited info from places to player for loading @feature

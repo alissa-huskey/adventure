@@ -14,6 +14,7 @@ from adventure.player import (
     get_health,
     save_game,
     load_game,
+    player,
 )
 from adventure.data.help import COMMANDS
 from adventure.formatting import (
@@ -147,6 +148,12 @@ def do_consume(name=None, delay=1, *args):
         error(f"Sorry, you don't have any {name} to {action}.")
 
     health_points = item.get("health")
+
+    if health_points and player()["health"] >= 100:
+        error(f"Don't {action} the {name} when you're healthy!")
+
+    adjust_inventory(name, -1)
+
     message = item.get("consume-msg", [])
 
     if not message:
@@ -160,8 +167,6 @@ def do_consume(name=None, delay=1, *args):
     for text in message:
         info(text, after=1)
         time.sleep(delay)
-
-    adjust_inventory(name, -1)
 
 def do_examine(name=None, *args):
     """Look at an item in the current place or in inventory."""
