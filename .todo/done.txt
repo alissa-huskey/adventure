@@ -22,3 +22,7 @@ x 2021-09-23 2021-09-21 remove direction argument from do_look @features
 x 2021-09-23 2021-09-21 modify UserError to take a command @housekeeping
 x 2021-09-23 2021-09-22 fancier inventory display @feature
 x 2021-09-23 2021-09-22 add health to do_stats @feature
+x 2021-09-24 2021-09-23 add icon to examine @feature
+x 2021-09-24 2021-09-22 add quantity to examine if it's an inventory item @feature
+x 2021-09-24 2021-09-22 add price to examine if in market @feature
+x 2021-09-24 2021-09-22 save and load player state @feature

@@ -29,9 +29,29 @@ COMMANDS = [
     },
     {
         "name": "stats",
-        "description": "show your health",
+        "description": "show your health and gems",
         "examples": [],
         "aliases": ["self", "me"],
+        "arguments": {
+            "required": {},
+            "optional": {},
+        },
+    },
+    {
+        "name": "save",
+        "description": "save your game",
+        "examples": [],
+        "aliases": [],
+        "arguments": {
+            "required": {},
+            "optional": {},
+        },
+    },
+    {
+        "name": "load",
+        "description": "load a saved game",
+        "examples": [],
+        "aliases": [],
         "arguments": {
             "required": {},
             "optional": {},

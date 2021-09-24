@@ -112,8 +112,8 @@ PLACES = [
         "position": (3, 0),
         "description": "",
         "look": {
-            "N": "an impenetrable forest",
-            "E": "",
+            "N": None,
+            "E": None,
             "S": "a cave",
             "W": "path",
         },
@@ -126,9 +126,9 @@ PLACES = [
         "description": "",
         "look": {
             "N": "the road",
-            "S": "",
-            "E": "",
-            "W": "",
+            "S": None,
+            "E": None,
+            "W": None,
         },
         "items": ["dragon"],
         "actions": {

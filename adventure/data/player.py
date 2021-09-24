@@ -8,10 +8,14 @@ def init():
 
     return PLAYER, INVENTORY_ACTIONS
 
-def player():
+def player(data=None):
+    global PLAYER
+    if data: PLAYER = data
     return PLAYER
 
-def all_inventory_actions():
+def all_inventory_actions(data=None):
+    global INVENTORY_ACTIONS
+    if data: INVENTORY_ACTIONS = data
     return INVENTORY_ACTIONS
 
 DEFAULTS = {

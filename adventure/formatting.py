@@ -2,12 +2,11 @@ from sys import stderr
 from collections import defaultdict
 import re
 
+from blessed.terminal import Terminal
 from console import fg, bg, fx
 from console.screen import sc
 from console.progress import ProgressBar, _ic, _if, _il
 from console.utils import len_stripped
-
-from blessed.terminal import Terminal
 
 from adventure import NotFound, UserError, SilentError, UnexpectedError, themes
 from adventure.player import state
@@ -79,7 +78,7 @@ class Formatter():
         return self.func(text, self.width)
 
 class Table:
-    def __init__(self, table=None, align=None, indent=6, padding=1, sizes=None):
+    def __init__(self, table=None, align=None, indent=INDENT, padding=1, sizes=None):
         self.rows = table or []
         self.indent = indent
 
@@ -164,7 +163,7 @@ def info(*args, before=0, after=0, sep=" "):
         message,
         width=WIDTH-MARGIN,
         initial_indent=" " * INDENT,
-        subsequent_indent=" " * (INDENT + 2),
+        subsequent_indent=" " * INDENT,
     )
 
     print("\n"*before, end="")
@@ -221,4 +220,3 @@ def print_gems(gems):
 
     # print the number of gems
     print(TERM.rjust(gems, 3))
-

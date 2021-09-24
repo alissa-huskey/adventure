@@ -14,65 +14,52 @@ from adventure.actions import (
     do_examine,
     do_go,
     do_inventory,
+    do_load,
     do_help,
     do_jump,
     do_look,
     do_map,
     do_pet,
     do_quit,
+    do_save,
     do_shop,
     do_stats,
 )
 
-@pytest.mark.parametrize("item,action,in_args,klass,message", [
-    ("gems", "drink", ["elixr"], NotFound, "item not in inventory"),
-    ("gems", "xxx", [], NotFound, "no such inventory command"),
-    ("elixr", "drink", [], UserError, "missing required arg"),
+@pytest.mark.parametrize("item, action, in_args, context, func_name, out_args, message", [
+    ("gems", "drink", ["elixr"], pytest.raises(NotFound), None, None, "item not in inventory"),
+    ("gems", "xxx", [], pytest.raises(NotFound), None, None, "no such inventory command"),
+    ("elixr", "drink", [], pytest.raises(UserError), None, None, "missing required arg"),
+    ("elixr", "drink", ["elixr"], does_not_raise(), "do_consume", ["elixr"], "inventory action, with args"),
 ])
-def test_contextual_action_inventory_raises(item, action, in_args, klass, message):
+def test_contextual_action_inventory(item, action, in_args, context, func_name, out_args, message):
     adjust_inventory(item, 1)
 
-    with pytest.raises(klass) as ex:
+    with context as ex:
         func, args = contextual_action(action, in_args)
 
-    if ex.type is not klass:
-        breakpoint()
+    if not ex:
+        assert func.__name__ == func_name, f"{message}: {action}, {in_args}"
+        assert args == out_args
 
-@pytest.mark.parametrize("item,action,in_args,func_name,out_args,message", [
-    ("elixr", "drink", ["elixr"], "do_consume", ["elixr"], "inventory action, with args"),
+@pytest.mark.parametrize("place, action, in_args, context, func_name, out_args, message", [
+    ("market", "xxx", [], pytest.raises(NotFound), None, None, None),
+    ("market", "buy", [], pytest.raises(UserError), None, None, None),
+    ("market", "buy", ["xxx"], pytest.raises(UserError), None, None, None),
+    ("market", "shop", [], does_not_raise(), "do_shop", [], "local action, no args"),
+    ("market", "buy", ["elixr"], does_not_raise(), "do_buy", ["elixr"], "local action, with required arg"),
+    ("cave", "pet", ["red", "dragon"], does_not_raise(), "do_pet", ["dragon", "red"], "local action, reorder item"),
+    ("cave", "pet", ["dragon", "red"], does_not_raise(), "do_pet", ["dragon", "red"], "local action, correct order"),
 ])
-def test_contextual_action_inventory(item, action, in_args, func_name, out_args, message):
-    adjust_inventory(item, 1)
-
-    func, args = contextual_action(action, in_args)
-
-    assert func.__name__ == func_name, f"{message}: {action}, {in_args}"
-    assert args == out_args
-
-@pytest.mark.parametrize("place,action,in_args,func_name,out_args,message", [
-    ("market", "shop", [], "do_shop", [], "local action, no args"),
-    ("market", "buy", ["elixr"], "do_buy", ["elixr"], "local action, with required arg"),
-    ("cave", "pet", ["red", "dragon"], "do_pet", ["dragon", "red"], "local action, reorder item"),
-    ("cave", "pet", ["dragon", "red"], "do_pet", ["dragon", "red"], "local action, correct order"),
-])
-def test_contextual_action_local(place, action, in_args, func_name, out_args, message):
+def test_contextual_action_local(place, action, in_args, context, func_name, out_args, message):
     do_jump(place)
 
-    func, args = contextual_action(action, in_args, local=True)
-
-    assert func.__name__ == func_name, f"{message}: {action}, {in_args}"
-    assert args == out_args
-
-@pytest.mark.parametrize("place,action,in_args,klass", [
-    ("market", "xxx", [], NotFound),
-    ("market", "buy", [], UserError),
-    ("market", "buy", ["xxx"], UserError),
-])
-def test_contextual_action_local_raises(place, action, in_args, klass):
-    do_jump(place)
-
-    with pytest.raises(klass):
+    with context as ex:
         func, args = contextual_action(action, in_args, local=True)
+
+    if not ex:
+        assert func.__name__ == func_name, f"{message}: {action}, {in_args}"
+        assert args == out_args
 
 
 @pytest.mark.parametrize("func, args, context", [

@@ -7,7 +7,14 @@ from console import fg, fx
 from adventure.args import require, validate, extra_args
 from adventure.items import COLORS, MOODS, get_item
 from adventure.help import get_help
-from adventure.player import adjust_health, current_place, state, get_health
+from adventure.player import (
+    adjust_health,
+    current_place,
+    state,
+    get_health,
+    save_game,
+    load_game,
+)
 from adventure.data.help import COMMANDS
 from adventure.formatting import (
     info,
@@ -167,20 +174,38 @@ def do_examine(name=None, *args):
         return
 
     item = get_item(name)
+    qty = get_inventory(name)
 
     if not item:
         error(f"I don't know what a {name!r} is")
 
-    if not (name in current_place()["items"] or get_inventory(name)):
+    if not (name in current_place()["items"] or qty):
         error(f"There is no {name!r} in {current_place()['name']}.")
 
+    price = item.get("price")
+    details = ""
+    if price and current_place()["name"] == "market":
+        details = f"{abs(price)} gems"
+
+    title = item.get("name", "Unnamed place")
     info(
-        fx.bold(item.get("name", "Unnamed place").title().ljust(MAX-10)) + \
-        item.get("icon", ""),
+        item.get("icon", "").ljust(4),
+        fx.bold(title.title()) + \
+        details.rjust(MAX-len(title)-5),
         before=1,
         after=1,
+        sep="",
     )
+
     info(mergelines(item["desc"]))
+
+    if qty:
+        info(
+            " "*4,
+            f"Inventory: (x {qty:>2})".rjust(MAX-4),
+            before=1,
+            sep=""
+        )
 
 def do_go(direction=None, steps=1, *args):
     """Move the player to a new position based on the direction they wish to
@@ -385,22 +410,48 @@ def do_stats(*args):
     bar("health ❤️", get_health())
     print_gems(get_inventory("gems"))
 
+def do_save(*args):
+    """Save your game"""
+    path = save_game()
+
+    print()
+    debug(path=path)
+    info("Game saved.")
+
+def do_load(*args):
+    """Load a saved game"""
+    data = load_game()
+
+    print()
+    debug(data=data)
+    title = "Loaded Game"
+    info(
+        fx.bold(title),
+        data.get("saved_at").strftime("%b %-d, %Y %-I:%M %p").rjust(MAX-len(title)),
+        after=1,
+    )
+    do_stats()
+    do_inventory()
+    do_look()
+
 
 ## ACTIONS #######################################
 
 ACTIONS = {
     "buy": {"name": "buy", "func": do_buy, "place": "market"},
-    "pet": {"name": "pet", "func": do_pet, "place": "cave"},
     "drink": {"name": "drink", "func": do_consume, "item": "elixr"},
-    "shop": {"name": "shop", "func": do_shop, "place": "market"},
-    "stats": {"name": "stats", "func": do_stats},
-    "map": {"name": "map", "func": do_map},
-    "inventory": {"name": "inventory", "func": do_inventory},
-    "look": {"name": "look", "func": do_look},
     "examine": {"name": "examine", "func": do_examine},
     "go": {"name": "go", "func": do_go},
-    "jump": {"name": "jump", "func": do_jump},
     "help": {"name": "help", "func": do_help},
+    "inventory": {"name": "inventory", "func": do_inventory},
+    "jump": {"name": "jump", "func": do_jump},
+    "load": {"name": "load", "func": do_load},
+    "look": {"name": "look", "func": do_look},
+    "map": {"name": "map", "func": do_map},
+    "pet": {"name": "pet", "func": do_pet, "place": "cave"},
+    "save": {"name": "save", "func": do_save},
+    "shop": {"name": "shop", "func": do_shop, "place": "market"},
+    "stats": {"name": "stats", "func": do_stats},
     "quit": {"name": "quit", "func": do_quit},
 }
 

@@ -21,4 +21,3 @@ class UnexpectedError(Error):
         return f"Something went wrong: {text}"
 
 class UserError(Error): ...
-

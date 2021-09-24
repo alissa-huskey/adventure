@@ -1,4 +1,13 @@
-from adventure.data.player import player
+import shelve
+import pickle
+from pathlib import Path
+
+from adventure.data.player import player, all_inventory_actions
+from adventure.date import now
+
+
+DATADIR = Path(__file__).parent.parent / "data"
+
 
 def get_health():
     return player()["health"]
@@ -11,6 +20,30 @@ def state(**kwargs):
             if val:
                 player()["state"][key] = val
     return player()["state"]
+
+def load_game(datadir=DATADIR):
+    path = datadir / "game"
+
+    with shelve.open(str(path), writeback=True) as db:
+        db["loaded_at"] = now()
+        player(db["player"])
+        all_inventory_actions(db["inventory_actions"])
+        data = dict(db)
+
+    return data
+
+def save_game(datadir=DATADIR, name=None):
+    path = datadir / "game"
+
+    with shelve.open(str(path), writeback=True) as db:
+        db["name"] = name
+        db["path"] = path.absolute()
+        db["saved_at"] = now()
+        db["loaded_at"] = None
+        db["player"] = player()
+        db["inventory_actions"] = all_inventory_actions()
+
+    return path
 
 def adjust_health(amount):
     player()["health"] += amount

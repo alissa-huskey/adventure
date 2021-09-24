@@ -2,6 +2,7 @@
 
 import shlex
 from pprint import pprint
+import sys
 
 from adventure.player import state
 from adventure.places import COMPASS_OPTIONS
@@ -110,6 +111,7 @@ def parse(response):
     return (func, words)
 
 def main():
+
     hr()
     print("Welcome to the adventure!\n")
     do_jump("home")
