@@ -1,25 +1,21 @@
-2021-09-21 add do_intro command  @feature
-2021-09-21 add docstrings @housekeeping
-2021-09-21 add tests @housekeeping
+(B) 2021-09-21 add do_intro command  @feature
+
 2021-09-21 add do_take and do_drop  @feature
 2021-09-21 descriptions for courtyard items @narrative
-(A) 2021-09-21 multi-word tokens @feature
-2021-09-21 legend of dragons in book @narrative
-2021-09-21 description for path items @narrative
-(B) 2021-09-21 road description @narrative
-(B) 2021-09-21 cave description @narrative
-2021-09-21 add delay for effect with time.sleep in do_pet @feature
-(A) 2021-09-21 multiple item tokens (ie ['stick', 'walking-stick']) @feature
-2021-09-22 don't let the user keep petting the dragon @feature
-2021-09-22 help for local and inventory commands @feature
-2021-09-22 list commands @feature
-2021-09-22 read from stdin @feature
-2021-09-22 add delayed steps when petting the dragon @feature @narrative
+(A) 2021-09-21 legend of dragons in book @narrative
+(A) 2021-09-21 description for path items @narrative
+(A) 2021-09-21 road description @narrative
+(A) 2021-09-21 cave description @narrative
+(B) 2021-09-21 add delay for effect with time.sleep in do_pet @feature
+(C) 2021-09-22 don't let the user keep petting the dragon @feature
+(C) 2021-09-22 help for local and inventory commands @feature
+(C) 2021-09-22 list commands @feature
+(B) 2021-09-22 add delayed steps when petting the dragon @feature @narrative
 2021-09-22 remove some items from the shop when bought @feature
 2021-09-22 show alias(es) in help @feature
 2021-09-23 refactor contextual_action, perhaps just validation now @housekeeping
 2021-09-23 generate ACTIONS dicts from items and places @housekeeping
-2021-09-23 test on windows @housekeeping
+(A) 2021-09-23 test on windows @housekeeping
 2021-09-24 take argument of saved file to load @housekeeping
-2021-09-24 fix "pet red head" command @bugfix
+(C) 2021-09-24 fix "pet red head" command @bugfix
 2021-09-24 move visited info from places to player for loading @feature
