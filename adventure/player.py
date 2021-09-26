@@ -12,14 +12,32 @@ DATADIR = Path(__file__).parent.parent / "data"
 def get_health():
     return player()["health"]
 
-def get_state(kind, obj, name):
-    state = obj.get("state").copy()
-    state.update(player()[kind].get(name, {}))
+def get_state(kind, obj, key=None):
+    """Return the state for a particular place or item
+
+    Args:
+        kind (str):              items or places
+        obj (dict):              the item or place in question
+        key (str, default=None): if present, return the state for this key
+
+    >>> dragon = {"name": "dragon", "state": {"state": "sleeping"}}
+    >>> get_state("items", dragon)
+    {"state": "sleeping"}
+
+    >>> get_state("items", dragon, "state")
+    "sleeping"
+    """
+
+    state = obj.get("state", {}).copy()
+    state.update(player()[kind].get(obj.get("name"), {}))
+
+    if key:
+        return state.get(key)
 
     return state
 
 def set_state(kind, name, value):
-    player()[kind][name] = value
+    player()[kind].setdefault(name, {}).update(value)
 
 def state(**kwargs):
     """Get or set state details"""

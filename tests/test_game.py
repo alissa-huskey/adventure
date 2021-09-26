@@ -17,7 +17,7 @@ from adventure.inventory import adjust_inventory
     ("market", None, "menu", "do_menu", [], does_not_raise()),
     (None, None, "drink", None, [], pytest.raises(UserError, match="No such command")),
     (None, None, "xxx", None, [], pytest.raises(UserError, match="No such command")),
-    (None, "elixr", "drink elixr", "do_consume", ["elixr"], does_not_raise()),
+    (None, "elixir", "drink elixir", "do_consume", ["elixir"], does_not_raise()),
 ])
 def test_parse(place, item, text, action, expected_args, context):
     do_jump(place or "home")

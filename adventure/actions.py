@@ -210,7 +210,7 @@ def do_examine(name=None, *args):
         sep="",
     )
 
-    desc = apply_state(item["desc"], get_state("items", item, "dragon"))
+    desc = apply_state(item["desc"], get_state("items", item))
     desc = highlight(desc, item.get("items"), themes.items)
     merge(desc)
 
@@ -375,7 +375,7 @@ def do_pet(item=None, color=None, *args):
     require("pet", item, "item", choices=item_choices)
     extra_args("pet", args)
 
-    current = get_state("items", get_item("dragon"), "dragon").get("state")
+    current = get_state("items", get_item("dragon"), "state")
     if current != "sleeping":
         info("The dragon eyes you askance.", before=1, after=1)
         info("You back away slowly.", after=1)
@@ -462,7 +462,7 @@ def do_load(*args):
 
 ACTIONS = {
     "buy": {"name": "buy", "func": do_buy, "place": "market"},
-    "drink": {"name": "drink", "func": do_consume, "item": "elixr"},
+    "drink": {"name": "drink", "func": do_consume, "item": "elixir"},
     "examine": {"name": "examine", "func": do_examine},
     "go": {"name": "go", "func": do_go},
     "help": {"name": "help", "func": do_help},

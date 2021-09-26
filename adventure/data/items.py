@@ -15,7 +15,7 @@ ITEMS = {
     "book": {
         "name": "book",
         "desc": """
-                The hefty leatherbound tome is open to a page that reads:
+                The hefty leather bound tome is open to a page that reads:
 
                     : At the edge of the woods is a cave that is home to a three headed
                       dragon, each with a different temperament.
@@ -76,8 +76,8 @@ ITEMS = {
         "name": "cloak",
         "desc": "a fancy cloak",
     },
-    "elixr": {
-        "name": "healing elixr",
+    "elixir": {
+        "name": "healing elixir",
         "desc": "A small corked bottle filled with a swirling green liquid.",
         "price": -10,
         "health": 15,
@@ -108,7 +108,7 @@ ITEMS = {
         "price": -22,
         "desc": """
             A double-edged 14 inch dagger with a crescent shaped hardwood grip, metal
-            crossguard, and curved studded metal pommel.
+            cross guard, and curved studded metal pommel.
         """,
         "icon": "🗡    ",
     },
@@ -155,7 +155,7 @@ ITEMS = {
     "floor": {
         "name": "forest floor",
         "desc": """
-            Brilliant autumn leaves lay scattered amidst the foliage and detritis on the
+            Brilliant autumn leaves lay scattered amidst the foliage and detritus on the
             forest floor. You see an acorn nestled amongst the leaves.
         """,
         "items": ["acorn"],

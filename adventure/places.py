@@ -1,7 +1,12 @@
 import re
 
 from adventure.formatting import info, merge, highlight
-from adventure.player import current_position, current_place
+from adventure.player import (
+    current_position,
+    current_place,
+    get_state,
+    set_state,
+)
 from adventure.data.places import (
     COMPASS,
     MOVEMENTS,
@@ -17,7 +22,7 @@ def show(place, long=False):
     """Print stylized place description
 
     Print long description if long is present or this place has not been visited.
-    Otherwise print short description if it exists. Set place["visited"] to True.
+    Otherwise print short description if it exists. Set visited to True.
 
     Args:
         long (bool, default=False): print the long description
@@ -25,7 +30,7 @@ def show(place, long=False):
 
     info(themes.header(place.get("name", "Unnamed location").title()), before=1, after=1)
 
-    if long or not place.get("visited"):
+    if long or not get_state("places", place, "visited"):
         desc = place.get("description")
     else:
         desc = place.get("short") or place.get("description")
@@ -40,7 +45,7 @@ def show(place, long=False):
         direction = get_direction(letter)
         info(f"To the {themes.compass(direction)} is {desc}.")
     print()
-    place["visited"] = True
+    set_state("places", place["name"], {"visited": True})
 
 def get_place(key):
     """Return the place associated with either its name or position key.

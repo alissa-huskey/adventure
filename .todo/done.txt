@@ -31,3 +31,7 @@ x 2021-09-24 2021-09-21 add tests @housekeeping
 x 2021-09-26 2021-09-21 legend of dragons in book @narrative
 x 2021-09-26 2021-09-21 add delay for effect with time.sleep in do_pet @feature
 x 2021-09-26 2021-09-22 don't let the user keep petting the dragon @feature
+x 2021-09-26 2021-09-23 test on windows @housekeeping
+x 2021-09-26 2021-09-21 road description @narrative
+x 2021-09-26 2021-09-24 in examine, highlight items that are in other items @feature
+x 2021-09-26 2021-09-24 move visited info from places to player for loading @feature

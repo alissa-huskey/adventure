@@ -23,8 +23,7 @@ PLACES = [
     {
         "name": "home",
         "position": (0, 0),
-        "visited": False,
-        "short": "Your house.",
+        "short": "Your cottage.",
         "description": """
             The furniture in your one room stone cottage is made up of dark wood. A
             circular rug covers much of the cold stone floor and heat from a cast
@@ -72,7 +71,7 @@ PLACES = [
     {
         "name": "path",
         "position": (2, 0),
-        "short": "A cobblestone path into town.",
+        "short": "A cobblestone path through town.",
         "description": """
             A narrow cobblestone lane that winds through the village and under
             stone archways.
@@ -96,6 +95,7 @@ PLACES = [
     {
         "name": "market",
         "position": (2, 1),
+        "short": "The corner store.",
         "description": """
             A tidy store with shelves full of goods to buy. A wooden hand painted menu
             hangs on the wall.
@@ -106,19 +106,16 @@ PLACES = [
             "S": "cobblestone path into town",
             "W": None,
         },
-        "items": ["elixr", "crystal ball", "dagger"],
+        "items": ["elixir", "crystal ball", "dagger"],
         "actions": {
-            "buy": {"elixr", "crystal ball", "dagger"},
+            "buy": {"elixir", "crystal ball", "dagger"},
             "menu": {},
         },
     },
-    #  acorn
-    #  chill autumn wind
-    #  mushrooms at the base of a trunk
-    #  fallen log
     {
         "name": "road",
         "position": (3, 0),
+        "short": "A dirt road meandering through the woods.",
         "description": """
             A dirt road meanders under a canopy of autumn leaves in brilliant hues
             of gold and crimson.
@@ -142,6 +139,7 @@ PLACES = [
     {
         "name": "cave",
         "position": (3, -1),
+        "short": None,
         "description": """
             Resting atop a mound of treasure is a giant three headed dragon.
         """,
@@ -163,9 +161,11 @@ BY_NAME = {p["name"]: p for p in PLACES}
 
 
 def leave_cave():
+    """Reset the dragons state to sleeping upon leaving the cave."""
     set_state("items", "dragon", {"state": "sleeping"})
 
 def trigger_hook(hook, place):
+    """Trigger any defined enter_ or leave_ hooks for a place."""
     if not place:
         return
 

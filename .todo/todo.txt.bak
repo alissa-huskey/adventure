@@ -2,9 +2,7 @@
 2021-09-21 add do_take and do_drop  @feature
 2021-09-21 descriptions for courtyard items @narrative
 (A) 2021-09-21 description for path items @narrative
-(A) 2021-09-21 road description @narrative
 (A) 2021-09-21 cave description @narrative
-x 2021-09-26 2021-09-22 don't let the user keep petting the dragon @feature
 (C) 2021-09-22 help for local and inventory commands @feature
 (C) 2021-09-22 list commands @feature
 (B) 2021-09-22 add delayed steps when petting the dragon @feature @narrative
@@ -12,10 +10,10 @@ x 2021-09-26 2021-09-22 don't let the user keep petting the dragon @feature
 2021-09-22 show alias(es) in help @feature
 2021-09-23 refactor contextual_action, perhaps just validation now @housekeeping
 2021-09-23 generate ACTIONS dicts from items and places @housekeeping
-(A) 2021-09-23 test on windows @housekeeping
 2021-09-24 take argument of saved file to load @housekeeping
 (C) 2021-09-24 fix "pet red head" command @bugfix
-2021-09-24 move visited info from places to player for loading @feature
+x 2021-09-26 2021-09-24 move visited info from places to player for loading @feature
 2021-09-24 add hint command @idea
-2021-09-24 in examine, highlight items that are in other items @feature
 2021-09-26 rename state() to history @housekeeping
+2021-09-26 dragon description @narrative
+(A) 2021-09-26 publish to pypi @housekeeping

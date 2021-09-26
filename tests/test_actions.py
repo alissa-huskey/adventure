@@ -27,10 +27,10 @@ from adventure.actions import (
 )
 
 @pytest.mark.parametrize("item, action, in_args, context, func_name, out_args, message", [
-    ("gems", "drink", ["elixr"], pytest.raises(NotFound), None, None, "item not in inventory"),
+    ("gems", "drink", ["elixir"], pytest.raises(NotFound), None, None, "item not in inventory"),
     ("gems", "xxx", [], pytest.raises(NotFound), None, None, "no such inventory command"),
-    ("elixr", "drink", [], pytest.raises(UserError), None, None, "missing required arg"),
-    ("elixr", "drink", ["elixr"], does_not_raise(), "do_consume", ["elixr"], "inventory action, with args"),
+    ("elixir", "drink", [], pytest.raises(UserError), None, None, "missing required arg"),
+    ("elixir", "drink", ["elixir"], does_not_raise(), "do_consume", ["elixir"], "inventory action, with args"),
 ])
 def test_contextual_action_inventory(item, action, in_args, context, func_name, out_args, message):
     adjust_inventory(item, 1)
@@ -47,7 +47,7 @@ def test_contextual_action_inventory(item, action, in_args, context, func_name, 
     ("market", "buy", [], pytest.raises(UserError), None, None, None),
     ("market", "buy", ["xxx"], pytest.raises(UserError), None, None, None),
     ("market", "menu", [], does_not_raise(), "do_menu", [], "local action, no args"),
-    ("market", "buy", ["elixr"], does_not_raise(), "do_buy", ["elixr"], "local action, with required arg"),
+    ("market", "buy", ["elixir"], does_not_raise(), "do_buy", ["elixir"], "local action, with required arg"),
     ("cave", "pet", ["red", "dragon"], does_not_raise(), "do_pet", ["dragon", "red"], "local action, reorder item"),
     ("cave", "pet", ["dragon", "red"], does_not_raise(), "do_pet", ["dragon", "red"], "local action, correct order"),
 ])
@@ -81,11 +81,11 @@ def test_get_action(cmd, func):
     assert get_action(cmd) == func
 
 @pytest.mark.parametrize("item, args, amount, context", [
-    ("elixr", [], -10, does_not_raise()),
+    ("elixir", [], -10, does_not_raise()),
     ("", [], 0, pytest.raises(UserError, match="buy needs a item")),
-    ("elixr", ["xxx"], -10, pytest.raises(UserError, match="buy received unknown arguments: xxx")),
+    ("elixir", ["xxx"], -10, pytest.raises(UserError, match="buy received unknown arguments: xxx")),
     ("xxx", [], 0, pytest.raises(UserError, match="No xxx here")),
-    ("elixr", [], 5, pytest.raises(UserError, match=r"you don't have \d+ gems")),
+    ("elixir", [], 5, pytest.raises(UserError, match=r"you don't have \d+ gems")),
 ])
 def test_do_buy(item, args, amount, context):
     do_jump("market")
@@ -98,21 +98,21 @@ def test_do_buy(item, args, amount, context):
         assert get_inventory(item)
         assert not get_inventory("gems")
 
-def test_do_drink_elixr_when_healthy():
+def test_do_drink_elixir_when_healthy():
     adjust_health(100)
-    adjust_inventory("elixr", 1)
+    adjust_inventory("elixir", 1)
     state(command="drink")
 
-    with pytest.raises(UserError, match="Don't drink the elixr when you're healthy!") as ex:
-        do_consume("elixr", delay=0)
+    with pytest.raises(UserError, match="Don't drink the elixir when you're healthy!") as ex:
+        do_consume("elixir", delay=0)
 
-    assert get_inventory("elixr") == 1
+    assert get_inventory("elixir") == 1
 
 @pytest.mark.parametrize("item, args, amount, context", [
-    ("elixr", [], 1, does_not_raise()),
+    ("elixir", [], 1, does_not_raise()),
     (None, [], 0, pytest.raises(UserError, match="drink needs a item")),
-    ("elixr", ["xxx"], 0, pytest.raises(UserError, match="drink received unknown arguments")),
-    ("elixr", [], 0, pytest.raises(UserError, match="Sorry, you don't have any")),
+    ("elixir", ["xxx"], 0, pytest.raises(UserError, match="drink received unknown arguments")),
+    ("elixir", [], 0, pytest.raises(UserError, match="Sorry, you don't have any")),
     ("xxx", [], 0, pytest.raises(UserError, match="I don't know what a 'xxx' is")),
 ])
 def test_do_consume(item, args, amount, context):
@@ -133,8 +133,8 @@ def test_do_consume(item, args, amount, context):
     ("home", 0, "bed", [], does_not_raise()),
     ("home", 0, "me", [], does_not_raise()),
     ("home", 0, "bed", ["xxx"], pytest.raises(UserError, match="examine received unknown arguments")),
-    ("home", 1, "elixr", [], does_not_raise()),
-    ("home", 0, "elixr", [], pytest.raises(UserError, match="There is no 'elixr' in home")),
+    ("home", 1, "elixir", [], does_not_raise()),
+    ("home", 0, "elixir", [], pytest.raises(UserError, match="There is no 'elixir' in home")),
     ("home", 0, "xxx", [], pytest.raises(UserError, match="I don't know what a 'xxx' is")),
     ("home", 0, "dragon", [], pytest.raises(UserError, match="There is no 'dragon' in home")),
 ])
