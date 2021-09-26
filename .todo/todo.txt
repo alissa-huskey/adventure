@@ -1,4 +1,3 @@
-(B) 2021-09-21 add do_intro command  @feature
 2021-09-21 add do_take and do_drop  @feature
 2021-09-21 descriptions for courtyard items @narrative
 (A) 2021-09-21 description for path items @narrative
@@ -7,7 +6,6 @@
 (C) 2021-09-22 list commands @feature
 (B) 2021-09-22 add delayed steps when petting the dragon @feature @narrative
 2021-09-22 remove some items from the shop when bought @feature
-2021-09-22 show alias(es) in help @feature
 2021-09-23 refactor contextual_action, perhaps just validation now @housekeeping
 2021-09-23 generate ACTIONS dicts from items and places @housekeeping
 2021-09-24 take argument of saved file to load @housekeeping

@@ -4,8 +4,8 @@ from adventure.places import COMPASS
 COMMANDS = [
     {
         "name": "help",
-        "description": "get help on available commands",
-        "examples": [],
+        "description": "get information about actions",
+        "examples": ["help", "help go"],
         "aliases": ["?"],
         "arguments": {
             "required": {},
@@ -20,68 +20,31 @@ COMMANDS = [
     {
         "name": "quit",
         "description": "leave the game",
-        "examples": [],
         "aliases": ["q", "exit"],
-        "arguments": {
-            "required": {},
-            "optional": {},
-        },
     },
     {
         "name": "stats",
         "description": "show your health and gems",
-        "examples": [],
-        "aliases": ["self", "me"],
-        "arguments": {
-            "required": {},
-            "optional": {},
-        },
+        "aliases": ["me", "self"],
     },
     {
         "name": "save",
         "description": "save your game",
-        "examples": [],
-        "aliases": [],
-        "arguments": {
-            "required": {},
-            "optional": {},
-        },
     },
     {
         "name": "load",
         "description": "load a saved game",
-        "examples": [],
-        "aliases": [],
-        "arguments": {
-            "required": {},
-            "optional": {},
-        },
     },
     {
         "name": "inventory",
         "description": "show your inventory",
-        "examples": [],
         "aliases": ["i"],
-        "arguments": {
-            "required": {},
-            "optional": {},
-        }
     },
     {
         "name": "look",
         "description": "describe your location",
-        "examples": [ "look", "look west", "look around" ],
+        "examples": ["look"],
         "aliases": ["l"],
-        "arguments": {
-            "required": {},
-            "optional": {
-                "direction": {
-                    "desc": "which direction to look",
-                    "options": ["around"]+list(COMPASS.values()),
-                    "default": "None",
-                }
-            },
-        }
     },
     {
         "name": "examine",
@@ -100,8 +63,8 @@ COMMANDS = [
     },
     {
         "name": "go",
-        "description": "go somewhere",
-        "examples": ["go east", "g e", "east"],
+        "description": "move in a direction",
+        "examples": ["go east", "g w", "south", "go north 3"],
         "aliases": ["g"],
         "arguments": {
             "required": {
@@ -123,25 +86,24 @@ COMMANDS = [
         "name": "map",
         "listed": False,
         "description": "show the map",
-        "examples": [],
         "aliases": ["m"],
-        "arguments": {
-            "required": {},
-            "optional": {},
-        },
     },
     {
         "name": "jump",
         "listed": False,
-        "description": "jump to a particular place",
+        "description": "jump straight to a particular place",
         "examples": ["jump home", "j home"],
         "aliases": ["j"],
         "arguments": {
             "required": {
                 "place": { "desc": "where to jump to", },
             },
-            "optional": {},
         },
+    },
+    {
+        "name": "intro",
+        "description": "show the introduction",
+        "examples": ["intro"],
     },
 ]
 
@@ -149,5 +111,5 @@ COMMANDS = [
 TOPICS = {}
 for cmd in COMMANDS:
     TOPICS[cmd["name"]] = cmd
-    for alias in cmd["aliases"]:
+    for alias in cmd.get("aliases", []):
         TOPICS[alias] = cmd

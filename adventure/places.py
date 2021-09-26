@@ -36,8 +36,12 @@ def show(place, long=False):
         desc = place.get("short") or place.get("description")
 
     if desc:
-        desc = highlight(desc, place.get("items"), themes.items)
-        desc = highlight(desc, place.get("actions"), themes.cmd)
+        desc = highlight(
+            desc, {
+                themes.items: place.get("items"),
+                themes.cmd: place.get("actions"),
+            }
+        )
         merge(desc, after=1)
 
     for letter, desc in place["look"].items():

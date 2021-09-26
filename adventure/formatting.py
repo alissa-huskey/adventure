@@ -169,17 +169,19 @@ def merge(text, indent=INDENT, **kwargs):
     if after:
         print("\n"*after, end="")
 
-def highlight(text, words, style):
+def highlight(text, styles):
     """Highlight all words in text with style."""
-    if not words:
-        return text
+    for style, words in styles.items():
+        if not words:
+            continue
 
-    return re.sub(
-        rf'\b({"|".join(words)})\b',
-        rf'{style}\1{fg.default}',
-        text,
-        flags=re.IGNORECASE,
-    )
+        text = re.sub(
+            rf'\b({"|".join(words)})\b',
+            rf'{style}\1{fg.default}',
+            text,
+            flags=re.IGNORECASE,
+        )
+    return text
 
 def apply_state(template, state):
     """Apply state to a template."""
@@ -188,20 +190,28 @@ def apply_state(template, state):
 
     return template.substitute(**state)
 
-def info(*args, before=0, after=0, sep=" ", indent=INDENT):
+def info(*args, before=0, after=0, sep=" ", indent=INDENT, should_merge=False,
+         should_wrap=True, styles={}, **kwargs):
     message = sep.join(map(str, args))
 
-    # paragraphs =
+    if styles:
+        message = highlight(message, styles)
 
-    lines = TERM.wrap(
-        message,
-        width=WIDTH-MARGIN,
-        initial_indent=" " * indent,
-        subsequent_indent=" " * indent,
-    )
+    if should_merge:
+        return merge(message, before=before, after=after, indent=indent, **kwargs)
+
+    if should_wrap:
+        lines = TERM.wrap(
+            message,
+            width=WIDTH-MARGIN,
+            initial_indent=" " * indent,
+            subsequent_indent=" " * indent,
+        )
+    else:
+        lines = [(" "*indent) + message]
 
     print("\n"*before, end="")
-    print(*lines, sep="\n")
+    print(*lines, sep="\n", **kwargs)
     print("\n"*after, end="")
 
 def error(message="", silent=False, user=True):

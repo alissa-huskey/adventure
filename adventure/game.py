@@ -4,6 +4,7 @@ import shlex
 from pprint import pprint
 import sys
 
+from adventure.data.help import COMMANDS
 from adventure.player import state
 from adventure.places import COMPASS_OPTIONS
 from adventure.inventory import get_inventory
@@ -13,6 +14,8 @@ from adventure.formatting import (
     debug,
     print_error,
     hr,
+    highlight,
+    merge,
 )
 from adventure.player import (
     is_alive,
@@ -22,6 +25,7 @@ from adventure.player import (
 )
 from adventure.actions import (
     contextual_action,
+    do_intro,
     do_jump,
     do_go,
     ACTIONS
@@ -31,6 +35,7 @@ from adventure import (
     NotFound,
     UserError,
     SilentError,
+    themes,
 )
 
 def func_from_compass(command, words, *args):
@@ -110,11 +115,15 @@ def parse(response):
 
     return (func, words)
 
+
 def main():
 
     hr()
-    print("Welcome to the adventure!\n")
-    do_jump("home")
+    info("Welcome to the adventure!", before=1)
+    info("Explore the land. Find treasure. Buy cool stuff.", before=1)
+
+    do_jump("home", should_show=False)
+    do_intro()
     print()
     hr(char="~")
     print()

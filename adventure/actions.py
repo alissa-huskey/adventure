@@ -30,6 +30,8 @@ from adventure.formatting import (
     MAX,
     print_gems,
     apply_state,
+    hr,
+    TERM,
 )
 from adventure.inventory import (
     get_inventory,
@@ -211,7 +213,7 @@ def do_examine(name=None, *args):
     )
 
     desc = apply_state(item["desc"], get_state("items", item))
-    desc = highlight(desc, item.get("items"), themes.items)
+    desc = highlight(desc, {themes.items: item.get("items")})
     merge(desc)
 
     if qty:
@@ -237,6 +239,58 @@ def do_go(direction=None, steps=1, *args):
         error("You can't go that way.")
 
     show(current_place())
+
+def do_intro():
+    """Game intro."""
+    commands = [x["name"] for x in COMMANDS]
+    fmt = lambda text, items=[]: info(text, styles={themes.cmd: commands,
+                                                   themes.items: items})
+
+    info("You are an explorer seeking adventure and fortune.", after=1, before=1)
+
+    info("""
+            To interact with the world around you, type what you want to do. Most often
+            in the form of a verb, sometimes followed by a noun.
+         """, styles={themes.cmd: ["verb"], themes.items: ["noun"]}, should_merge=True)
+
+    info("For example...", after=1)
+
+    fmt('...you can look around.')
+    fmt('...if you see something you can examine it.', ["it"])
+    fmt('...to move go direction.', ["direction"])
+
+    info("Most actions have shortcuts like l for look or x for examine.",
+         styles={themes.cmd: ["l", "look", "x", "examine"]},
+         before=1,
+         after=1,
+    )
+
+    info("""
+            Special actions are usually highlighted, but sometimes you'll have only your
+            wit to guide you.
+         """,
+         should_merge=True,
+         styles={themes.cmd: ["highlighted"]},
+    )
+
+    info(
+        "To see available actions type help, or to get details about a particular action",
+        highlight("type help action", {themes.items: ["action"]}),
+        styles={themes.cmd: ["help"]},
+        after=1,
+    )
+
+    if current_place().get("name") == "home":
+        info("Your story beings in your very own cottage.", after=1)
+
+        info(
+            themes.hint(
+                f"Hint: Try " + \
+                themes.cmd('look') + \
+                themes.hint("ing around.")
+            ),
+            should_wrap=False,
+        )
 
 def do_inventory(*args):
     """Show inventory"""
@@ -265,7 +319,17 @@ def do_help(command=None, *args):
         width = max(map(len, [x["name"] for x in COMMANDS])) + 2
         for cmd in COMMANDS:
             if cmd.get("listed", True):
-                info(themes.cmd(cmd["name"].ljust(width)), cmd["description"])
+                sep = "  "
+                alias = first(cmd.setdefault("aliases", []), "")
+                name = cmd["name"]
+                if alias:
+                    sep = themes.normal(", ")
+
+                info(
+                    themes.cmd(alias.rjust(3)) + sep,
+                    themes.cmd(name.ljust(width)),
+                    cmd["description"]
+                )
         return
 
     # help for a specific command
@@ -282,14 +346,14 @@ def do_help(command=None, *args):
 
     tables = [Table(**options)]
     usage = [themes.cmd(cmd["name"])] + \
-            [themes.usage_arg(arg) for arg in cmd["arguments"]["required"]] + \
-            [f"[{themes.usage_arg(arg)}]" for arg in cmd["arguments"]["optional"]]
+            [themes.usage_arg(arg) for arg in cmd.setdefault("arguments", {}).setdefault("required", {})] + \
+            [f"[{themes.usage_arg(arg)}]" for arg in cmd["arguments"].setdefault("optional", {})]
 
     tables[-1].append([themes.help_title("Usage:"), " ".join(usage)])
     tables[-1].append(["", cmd["description"]])
     tables[-1].append()
 
-    if cmd["aliases"]:
+    if cmd.setdefault("aliases", []):
         tables[-1].append([themes.help_title("Aliases:"), ", ".join(cmd["aliases"])])
         tables[-1].append()
 
@@ -308,7 +372,7 @@ def do_help(command=None, *args):
             if arg.get("options"): tables[-1].append(["", "", "options: " + ", ".join(arg["options"])])
         tables[-1].append()
 
-    if cmd["examples"]:
+    if cmd.get("examples", []):
         tables.append(Table(**options))
         examples = [f"> {e}" for e in cmd["examples"]]
         tables[-1].append([themes.help_title("Examples:"), examples.pop(0)])
@@ -319,7 +383,7 @@ def do_help(command=None, *args):
     for t in tables:
         print(t.text)
 
-def do_jump(name=None, *args):
+def do_jump(name=None, *args, should_show=True):
     """Jump straight to a place"""
     require("jump", name, "place")
     extra_args("jump", args)
@@ -334,7 +398,8 @@ def do_jump(name=None, *args):
     except NotFound:
         error("Failed to jump to: {name!r} at {place['position']}", user=False)
 
-    show(current_place())
+    if should_show:
+        show(current_place())
 
 def do_look(*args):
     """Describe the scenery in the direction the player looks."""
@@ -466,6 +531,7 @@ ACTIONS = {
     "examine": {"name": "examine", "func": do_examine},
     "go": {"name": "go", "func": do_go},
     "help": {"name": "help", "func": do_help},
+    "intro": {"name": "intro", "func": do_intro},
     "inventory": {"name": "inventory", "func": do_inventory},
     "jump": {"name": "jump", "func": do_jump},
     "load": {"name": "load", "func": do_load},
@@ -480,7 +546,7 @@ ACTIONS = {
 
 # alias -> command func
 for cmd in COMMANDS:
-    for alias in cmd["aliases"]:
+    for alias in cmd.get("aliases", []):
         func = ACTIONS.get(cmd["name"])
         if not func:
             error(f"Missing action for {cmd['name']}")

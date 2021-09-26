@@ -1,4 +1,5 @@
 from contextlib import nullcontext as does_not_raise
+from console.core import _PaletteEntry
 
 import pytest
 
@@ -31,5 +32,4 @@ def test_parse(place, item, text, action, expected_args, context):
     if not ex:
         assert func.__name__ == action
         assert args == expected_args
-
 
