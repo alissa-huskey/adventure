@@ -1,3 +1,5 @@
+from string import Template
+
 COLORS = ["red", "black", "silver"]
 MOODS = ["cheerful", "lonely", "cranky"]
 
@@ -129,10 +131,11 @@ ITEMS = {
     "dragon": {
         "name": "dragon",
         "short": "a fearsome three headed dragon",
-        "desc": f"""
-            A fearsome dragon with three heads, one {COLORS[0]}, one
+        "desc": Template(f"""
+            A fearsome $state dragon with three heads, one {COLORS[0]}, one
             {COLORS[1]}, and one {COLORS[2]}.
-        """,
+        """),
+        "state": {"state": "sleeping"},
     },
     "log": {
         "name": "fallen log",

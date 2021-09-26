@@ -14,6 +14,8 @@ from adventure.player import (
     save_game,
     load_game,
     player,
+    get_state,
+    set_state,
 )
 from adventure.data.help import COMMANDS
 from adventure.formatting import (
@@ -22,12 +24,12 @@ from adventure.formatting import (
     error,
     NotFound,
     bar,
-    mergelines,
     merge,
     Grid,
     Table,
     MAX,
     print_gems,
+    apply_state,
 )
 from adventure.inventory import (
     get_inventory,
@@ -208,7 +210,8 @@ def do_examine(name=None, *args):
         sep="",
     )
 
-    desc = highlight(item["desc"], item.get("items"), themes.items)
+    desc = apply_state(item["desc"], get_state("items", item, "dragon"))
+    desc = highlight(desc, item.get("items"), themes.items)
     merge(desc)
 
     if qty:
@@ -372,6 +375,12 @@ def do_pet(item=None, color=None, *args):
     require("pet", item, "item", choices=item_choices)
     extra_args("pet", args)
 
+    current = get_state("items", get_item("dragon"), "dragon").get("state")
+    if current != "sleeping":
+        info("The dragon eyes you askance.", before=1, after=1)
+        info("You back away slowly.", after=1)
+        return
+
     random.shuffle(COLORS)
     dragons = dict(zip(COLORS, MOODS))
     mood = dragons[color]
@@ -395,6 +404,8 @@ def do_pet(item=None, color=None, *args):
 
     amount and adjust_inventory("gems", amount)
     damage and adjust_health(damage)
+
+    set_state("items", "dragon", {"state": "awake"})
 
     info(f"The {mood} {color} dragon {message}", before=1)
     return amount, damage

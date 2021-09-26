@@ -1,7 +1,5 @@
 import re
 
-from console import fg
-
 from adventure.formatting import info, merge, highlight
 from adventure.player import current_position, current_place
 from adventure.data.places import (
@@ -11,6 +9,7 @@ from adventure.data.places import (
     PLACES,
     BY_POS,
     BY_NAME,
+    trigger_hook,
 )
 from adventure import themes, NotFound
 
@@ -71,12 +70,19 @@ def get_direction(direction):
 def goto(pos):
     """Update the players pos(ition) and place, or return False if no such
     position exists."""
+    prev = current_place() or {}
     place = get_place(pos)
     if not place:
         return False
 
+
+    trigger_hook("leave", prev.get("name"))
+
     current_position(pos)
     current_place(place)
+
+    trigger_hook("enter", place.get("name"))
+
     return place
 
 def step(pos, direction, times=1):

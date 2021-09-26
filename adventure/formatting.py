@@ -1,6 +1,7 @@
 from sys import stderr
 from collections import defaultdict
 import re
+from string import Template
 
 from blessed.terminal import Terminal
 from console import fg, bg, fx
@@ -179,6 +180,13 @@ def highlight(text, words, style):
         text,
         flags=re.IGNORECASE,
     )
+
+def apply_state(template, state):
+    """Apply state to a template."""
+    if isinstance(template, str):
+        return template
+
+    return template.substitute(**state)
 
 def info(*args, before=0, after=0, sep=" ", indent=INDENT):
     message = sep.join(map(str, args))

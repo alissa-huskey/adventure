@@ -1,3 +1,8 @@
+import sys
+
+from adventure.formatting import info, debug
+from adventure.player import set_state
+
 COMPASS = {
     "n": "north",
     "e": "east",
@@ -155,4 +160,23 @@ PLACES = [
 
 BY_POS = {p["position"]: p for p in PLACES}
 BY_NAME = {p["name"]: p for p in PLACES}
+
+
+def leave_cave():
+    set_state("items", "dragon", {"state": "sleeping"})
+
+def trigger_hook(hook, place):
+    if not place:
+        return
+
+    name = f"{hook}_{place}"
+
+    try:
+        func = getattr(sys.modules[__name__], name)
+    except AttributeError:
+        return
+
+    func()
+    debug(f"{hook}ing the {place}")
+
 

@@ -12,6 +12,15 @@ DATADIR = Path(__file__).parent.parent / "data"
 def get_health():
     return player()["health"]
 
+def get_state(kind, obj, name):
+    state = obj.get("state").copy()
+    state.update(player()[kind].get(name, {}))
+
+    return state
+
+def set_state(kind, name, value):
+    player()[kind][name] = value
+
 def state(**kwargs):
     """Get or set state details"""
     if kwargs:

@@ -31,6 +31,7 @@ DEFAULTS = {
         "action": None,
         "item": None,
     },
+    "items": {},
 }
 
 PLAYER, INVENTORY_ACTIONS = deepcopy(DEFAULTS), {}
