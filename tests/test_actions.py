@@ -22,7 +22,7 @@ from adventure.actions import (
     do_pet,
     do_quit,
     do_save,
-    do_shop,
+    do_menu,
     do_stats,
 )
 
@@ -46,7 +46,7 @@ def test_contextual_action_inventory(item, action, in_args, context, func_name, 
     ("market", "xxx", [], pytest.raises(NotFound), None, None, None),
     ("market", "buy", [], pytest.raises(UserError), None, None, None),
     ("market", "buy", ["xxx"], pytest.raises(UserError), None, None, None),
-    ("market", "shop", [], does_not_raise(), "do_shop", [], "local action, no args"),
+    ("market", "menu", [], does_not_raise(), "do_menu", [], "local action, no args"),
     ("market", "buy", ["elixr"], does_not_raise(), "do_buy", ["elixr"], "local action, with required arg"),
     ("cave", "pet", ["red", "dragon"], does_not_raise(), "do_pet", ["dragon", "red"], "local action, reorder item"),
     ("cave", "pet", ["dragon", "red"], does_not_raise(), "do_pet", ["dragon", "red"], "local action, correct order"),
@@ -242,8 +242,8 @@ def test_do_quit(args):
     with pytest.raises(SystemExit):
         do_quit(*args)
 
-def do_shop():
+def test_do_menu():
     do_jump("market")
 
     with does_not_raise():
-        do_shop()
+        do_menu()

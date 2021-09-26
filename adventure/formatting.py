@@ -150,20 +150,46 @@ def bar(title, val):
 def hr(char="=", width=WIDTH, margin=""):
     print(margin, char*width, sep="")
 
-def mergelines(text):
-    """Merge a block of indented text into a single line."""
-    lines = text.strip().splitlines(keepends=True)
-    joined = " ".join([x.strip() if x.strip() else "\n" for x in lines])
-    return re.sub("\n ", "\n\n", joined)
+def merge(text, indent=INDENT, **kwargs):
+    unindented = re.sub('^[ ]*', "", text.strip(), flags=re.MULTILINE)
+    paragraphs = re.split(r"^\s*$", unindented, flags=re.MULTILINE)
+    after = kwargs.pop("after", 0)
 
-def info(*args, before=0, after=0, sep=" "):
+    for block in paragraphs:
+        idt = indent
+        block = re.sub("\n", " ", block.strip())
+        has_tabs = re.search('^(?P<tabs>:+) ', block)
+        if has_tabs:
+            idt += (4 * len(has_tabs.group("tabs")))
+            block = block[2:]
+
+        info(block, indent=idt, after=1, **kwargs)
+
+    if after:
+        print("\n"*after, end="")
+
+def highlight(text, words, style):
+    """Highlight all words in text with style."""
+    if not words:
+        return text
+
+    return re.sub(
+        rf'\b({"|".join(words)})\b',
+        rf'{style}\1{fg.default}',
+        text,
+        flags=re.IGNORECASE,
+    )
+
+def info(*args, before=0, after=0, sep=" ", indent=INDENT):
     message = sep.join(map(str, args))
+
+    # paragraphs =
 
     lines = TERM.wrap(
         message,
         width=WIDTH-MARGIN,
-        initial_indent=" " * INDENT,
-        subsequent_indent=" " * INDENT,
+        initial_indent=" " * indent,
+        subsequent_indent=" " * indent,
     )
 
     print("\n"*before, end="")

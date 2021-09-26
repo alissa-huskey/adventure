@@ -2,7 +2,6 @@ import random
 import time
 
 from more_itertools import first
-from console import fg, fx
 
 from adventure.args import require, validate, extra_args
 from adventure.items import COLORS, MOODS, get_item
@@ -24,6 +23,7 @@ from adventure.formatting import (
     NotFound,
     bar,
     mergelines,
+    merge,
     Grid,
     Table,
     MAX,
@@ -47,6 +47,7 @@ from adventure.places import (
     goto,
     step,
     show,
+    highlight,
 )
 from adventure import themes
 
@@ -200,14 +201,15 @@ def do_examine(name=None, *args):
 
     info(
         icon,
-        fx.bold(title.title()) + \
+        themes.header(title.title()) + \
         details.rjust(MAX-len(title)-len(icon)),
         before=1,
         after=1,
         sep="",
     )
 
-    info(mergelines(item["desc"]))
+    desc = highlight(item["desc"], item.get("items"), themes.items)
+    merge(desc)
 
     if qty:
         info(
@@ -238,7 +240,7 @@ def do_inventory(*args):
     inventory = get_all_inventory().copy()
     inventory.pop("gems")
 
-    info(fx.bold("Inventory"), before=1, after=1)
+    info(themes.header("Inventory"), before=1, after=1)
 
     if not inventory:
         info("Empty.")
@@ -347,14 +349,14 @@ def do_map(*args):
         name = place.get("name", "")
 
         if current_place() == place:
-            name = fx.bold(name)
+            name = themes.header(name)
         try:
             debug(f"place: {place['name']!r}, ({x=}, {y=})")
             grid.set(y, x, name)
         except IndexError:
             error(f"Couldn't map location: {place['name']!r}, ({x=}, {y=})", user=False)
 
-    info(fx.bold("Map"), before=2, after=1)
+    info(themes.header("Map"), before=2, after=1)
     print(grid.render(), "\n")
 
 def do_pet(item=None, color=None, *args):
@@ -400,13 +402,13 @@ def do_pet(item=None, color=None, *args):
 def do_quit(*args):
     quit()
 
-def do_shop(*args):
+def do_menu(*args):
     """Shop in the market."""
     market = current_place()
     if market["name"] != "market":
         error("Cannot shop unless in the market.", user=False)
 
-    print()
+    info(themes.header("Menu"), after=1, before=1)
     for item in (get_item(name) for name in market["items"]):
         info(
             item["icon"].ljust(4),
@@ -436,7 +438,7 @@ def do_load(*args):
     debug(data=data)
     title = "Loaded Game"
     info(
-        fx.bold(title),
+        themes.header(title),
         data.get("saved_at").strftime("%b %-d, %Y %-I:%M %p").rjust(MAX-len(title)),
         after=1,
     )
@@ -460,7 +462,7 @@ ACTIONS = {
     "map": {"name": "map", "func": do_map},
     "pet": {"name": "pet", "func": do_pet, "place": "cave"},
     "save": {"name": "save", "func": do_save},
-    "shop": {"name": "shop", "func": do_shop, "place": "market"},
+    "menu": {"name": "menu", "func": do_menu, "place": "market"},
     "stats": {"name": "stats", "func": do_stats},
     "quit": {"name": "quit", "func": do_quit},
 }

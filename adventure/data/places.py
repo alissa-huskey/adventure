@@ -85,15 +85,15 @@ PLACES = [
             "S": "",
             "W": "a courtyard",
         },
-        "items": ["flower pots", "planters"],
+        "items": ["pots", "planters"],
         "actions": {},
     },
     {
         "name": "market",
         "position": (2, 1),
         "description": """
-            A tidy store with shelves full of goods to buy.
-            You've heard this is a good place to shop.
+            A tidy store with shelves full of goods to buy. A wooden hand painted menu
+            hangs on the wall.
         """,
         "look": {
             "N": None,
@@ -104,26 +104,42 @@ PLACES = [
         "items": ["elixr", "crystal ball", "dagger"],
         "actions": {
             "buy": {"elixr", "crystal ball", "dagger"},
-            "shop": {},
+            "menu": {},
         },
     },
+    #  acorn
+    #  chill autumn wind
+    #  mushrooms at the base of a trunk
+    #  fallen log
     {
         "name": "road",
         "position": (3, 0),
-        "description": "",
+        "description": """
+            A dirt road meanders under a canopy of autumn leaves in brilliant hues
+            of gold and crimson.
+
+            You hear a stream burbling somewhere out of sight. Leaves crunch under
+            your feet on the sun dappled forest floor.
+
+            You see an ancient moss-covered hollow tree, its gnarled and twisted
+            branches looming over you. On the opposite side, a fallen log juts
+            partway into the road.
+        """,
         "look": {
             "N": None,
             "E": None,
-            "S": "a cave",
+            "S": "the entrance a cave",
             "W": "path",
         },
-        "items": [],
+        "items": ["log", "tree", "floor", "acorn", "mushrooms"],
         "actions": {},
     },
     {
         "name": "cave",
         "position": (3, -1),
-        "description": "",
+        "description": """
+            Resting atop a mound of treasure is a giant three headed dragon.
+        """,
         "look": {
             "N": "the road",
             "S": None,

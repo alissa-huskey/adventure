@@ -5,14 +5,26 @@ ITEMS = {
     "desk": {
         "name": "desk",
         "desc": """
-            A large tome sits open on a stand on the desk. You also see an ink pot,
+            A heavy book sits open on a stand on the desk. You also see an ink pot,
             a cup of feather quilled pens, and a pocket watch.
         """,
+        "items": ["book"],
     },
     "book": {
         "name": "book",
         "desc": """
-            Legend says in a cave nearby is a three headed dragon.
+                The hefty leatherbound tome is open to a page that reads:
+
+                    : At the edge of the woods is a cave that is home to a three headed
+                      dragon, each with a different temperament.
+
+                    : Legend says that if you happen upon the dragon sleeping, the brave
+                      may pet one of its three heads.
+
+                    : Choose the right head and you will be rewarded with great
+                      fortunes.
+
+                    : But beware, should choose poorly and it will surely mean your doom!
         """,
     },
     "chair": {
@@ -105,11 +117,14 @@ ITEMS = {
     "stick": {
         "name": "walking stick",
         "desc": "A gnarled walking stick.",
-        "takable": True,
+        "can-take": True,
     },
     "gate": {
         "name": "gate",
-        "desc": "Open fence gate.",
+        "desc": """
+            An open wooden gate connected to the low stone wall that runs along the edge
+            of your garden.
+        """
     },
     "dragon": {
         "name": "dragon",
@@ -118,5 +133,46 @@ ITEMS = {
             A fearsome dragon with three heads, one {COLORS[0]}, one
             {COLORS[1]}, and one {COLORS[2]}.
         """,
+    },
+    "log": {
+        "name": "fallen log",
+        "desc": """
+            The trunk of a tree fallen long ago bows up in the middle before coming to
+            rest partway into the road. Moss and patches of purple headed mushrooms grow on
+            the shady side.
+        """,
+        "items": ["mushrooms"],
+    },
+    "tree": {
+        "name": "hollow tree",
+        "desc": """
+            The gnarled and twisted branches of an ancient moss covered tree loom over you.
+        """
+    },
+    "floor": {
+        "name": "forest floor",
+        "desc": """
+            Brilliant autumn leaves lay scattered amidst the foliage and detritis on the
+            forest floor. You see an acorn nestled amongst the leaves.
+        """,
+        "items": ["acorn"],
+    },
+    "acorn": {
+        "name": "acorn",
+        "desc": "A brown acorn.",
+        "can-take": True,
+    },
+    "mushrooms": {
+        "name": "mushrooms",
+        "desc": "Purple capped mushrooms.",
+        "can-take": True,
+    },
+    "planters": {
+        "name": "planters",
+        "desc": "",
+    },
+    "pots": {
+        "name": "flower pots",
+        "desc": "",
     },
 }

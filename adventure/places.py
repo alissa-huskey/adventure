@@ -2,7 +2,7 @@ import re
 
 from console import fg
 
-from adventure.formatting import info, mergelines
+from adventure.formatting import info, merge, highlight
 from adventure.player import current_position, current_place
 from adventure.data.places import (
     COMPASS,
@@ -24,10 +24,7 @@ def show(place, long=False):
         long (bool, default=False): print the long description
     """
 
-    info(themes.title(place.get("name", "Unnamed location").title()), before=1, after=1)
-
-    items = place.get("items", [])
-    actions = place.get("actions", [])
+    info(themes.header(place.get("name", "Unnamed location").title()), before=1, after=1)
 
     if long or not place.get("visited"):
         desc = place.get("description")
@@ -35,21 +32,9 @@ def show(place, long=False):
         desc = place.get("short") or place.get("description")
 
     if desc:
-        if items:
-            desc = re.sub(
-                rf'\b({"|".join(items)})\b',
-                rf'{themes.items}\1{fg.default}',
-                desc,
-                flags=re.IGNORECASE,
-            )
-        if actions:
-            desc = re.sub(
-                rf'\b({"|".join(actions)})\b',
-                rf'{themes.cmd}\1{fg.default}',
-                desc,
-                flags=re.IGNORECASE,
-            )
-        info(mergelines(desc), after=1)
+        desc = highlight(desc, place.get("items"), themes.items)
+        desc = highlight(desc, place.get("actions"), themes.cmd)
+        merge(desc, after=1)
 
     for letter, desc in place["look"].items():
         if not desc: continue

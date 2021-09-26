@@ -19,3 +19,5 @@
 2021-09-24 take argument of saved file to load @housekeeping
 (C) 2021-09-24 fix "pet red head" command @bugfix
 2021-09-24 move visited info from places to player for loading @feature
+2021-09-24 add hint command @idea
+2021-09-24 in examine, highlight items that are in other items @feature

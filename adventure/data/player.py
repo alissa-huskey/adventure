@@ -4,7 +4,7 @@ from collections import defaultdict
 def init():
     global PLAYER, INVENTORY_ACTIONS
     PLAYER = deepcopy(DEFAULTS)
-    INVENTORY_ACTIONS = defaultdict(set)
+    INVENTORY_ACTIONS = {}
 
     return PLAYER, INVENTORY_ACTIONS
 
@@ -22,7 +22,7 @@ DEFAULTS = {
     "pos": None,
     "place": None,
     "health": 100,
-    "inventory": defaultdict(int,
+    "inventory": dict(
         gems=0,
     ),
     "state": {
@@ -33,4 +33,4 @@ DEFAULTS = {
     },
 }
 
-PLAYER, INVENTORY_ACTIONS = deepcopy(DEFAULTS), defaultdict(set)
+PLAYER, INVENTORY_ACTIONS = deepcopy(DEFAULTS), {}
