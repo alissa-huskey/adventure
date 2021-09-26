@@ -246,7 +246,7 @@ def do_intro():
     fmt = lambda text, items=[]: info(text, styles={themes.cmd: commands,
                                                    themes.items: items})
 
-    info("You are an explorer seeking adventure and fortune.", after=1, before=1)
+    info("You are an explorer seeking fortune and fun.", after=1, before=1)
 
     info("""
             To interact with the world around you, type what you want to do. Most often

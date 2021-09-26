@@ -148,8 +148,10 @@ def bar(title, val):
     pb = Bar(width=MAX-(len(title)+MARGIN+3))
     info(f"{title.title()} {pb(val-1)}")
 
-def hr(char="=", width=WIDTH, margin=""):
+def hr(char="=", width=WIDTH, margin="", after=0, before=0):
+    print("\n"*before, end="")
     print(margin, char*width, sep="")
+    print("\n"*after, end="")
 
 def merge(text, indent=INDENT, **kwargs):
     unindented = re.sub('^[ ]*', "", text.strip(), flags=re.MULTILINE)

@@ -3,6 +3,9 @@
 import shlex
 from pprint import pprint
 import sys
+from contextlib import contextmanager
+from console import fx
+
 
 from adventure.data.help import COMMANDS
 from adventure.player import state
@@ -116,39 +119,51 @@ def parse(response):
     return (func, words)
 
 
+@contextmanager
+def catcher():
+    """Catch and handle exceptions."""
+    try:
+        yield
+    except (EOFError, KeyboardInterrupt):
+        quit()
+    except SilentError:
+        ...
+    except (UnexpectedError, UserError) as err:
+        print_error(err)
+
+@contextmanager
+def doer():
+    """Do an action."""
+    with catcher():
+        debug(position=current_position(), place=current_place()["name"])
+        yield
+
+    hr(char="~", before=1, after=1)
+
+    if not is_alive():
+        info("Oh no, you're dead!", after=1)
+        quit()
+
 def main():
 
-    hr()
-    info("Welcome to the adventure!", before=1)
-    info("Explore the land. Find treasure. Buy cool stuff.", before=1)
-
     do_jump("home", should_show=False)
-    do_intro()
-    print()
-    hr(char="~")
-    print()
+
+    with doer():
+        hr()
+        info(themes.header("Welcome to the adventure!"), before=1)
+        #  info(fx.italic("Explore the lands. Find treasure. Buy cool stuff."))
+
+        do_intro()
 
     while True:
-        debug(position=current_position(), place=current_place()["name"])
 
-        try:
-            cmd, args = parse(input("> "))
-            cmd(*args)
-        except (EOFError, KeyboardInterrupt):
-            quit()
-        except SilentError:
-            continue
-        except (UnexpectedError, UserError) as err:
-            print_error(err)
-        finally:
-            print()
-            hr(char="~")
-            print()
+        with doer():
+            cmd, args = None, None
+            with catcher():
+                cmd, args = parse(input("> "))
 
-        if not is_alive():
-            info("Oh no, you're dead!")
-            print()
-            quit()
+            if cmd:
+                cmd(*args)
 
 
 if __name__ == "__main__":
