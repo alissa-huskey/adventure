@@ -26,7 +26,7 @@ ITEMS = {
                     : Choose the right head and you will be rewarded with great
                       fortunes.
 
-                    : But beware, should choose poorly and it will surely mean your doom!
+                    : But beware, choose poorly and it will surely mean your doom!
         """,
     },
     "chair": {
