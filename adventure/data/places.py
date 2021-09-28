@@ -141,7 +141,13 @@ PLACES = [
         "position": (3, -1),
         "short": None,
         "description": """
-            Resting atop a mound of treasure is a giant three headed dragon.
+            Your footsteps echo as you step into the vast cavern.
+
+            Shafts of sunlight slice through the gloom, playing against the landscape of
+            glittering treasure.
+
+            Resting atop a mound of gold, a collosal dragon rests curled up snugly. Its
+            three enormous heads snore softly, each in turn.
         """,
         "look": {
             "N": "the road",

@@ -68,3 +68,5 @@ Inspiration
 * [The Plan Was](https://driftword.ca/tag/jack/)
 * [Master List for Describing Weather](https://www.bryndonovan.com/2019/04/08/master-list-for-describing-weather/)
 * [Write a fairy tale about someone who can communicate with woodland creatures](https://blog.reedsy.com/creative-writing-prompts/fantasy/write-a-fairy-tale-about-someone-who-can-communica/)
+
+* [Aladdin's cave of wonders](https://www.artstation.com/artwork/Z5oQaG)
