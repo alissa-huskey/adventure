@@ -2,7 +2,7 @@ import shelve
 import pickle
 from pathlib import Path
 
-from adventure.data.player import player, all_inventory_actions
+from adventure.data.player import player, all_inventory_actions, HINTS
 from adventure.date import now
 
 
@@ -92,3 +92,10 @@ def current_position(val=None):
     if val:
         player()["position"] = val
     return player()["position"]
+
+def get_hints():
+    hints = player().get("hints")
+    if not hints:
+        player()["hints"] = hints = HINTS[:]
+    return hints
+

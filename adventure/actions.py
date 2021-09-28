@@ -16,6 +16,7 @@ from adventure.player import (
     player,
     get_state,
     set_state,
+    get_hints,
 )
 from adventure.data.help import COMMANDS
 from adventure.formatting import (
@@ -273,10 +274,8 @@ def do_intro():
          styles={themes.cmd: ["highlighted"]},
     )
 
-    info(
-        "To see available actions type help, or to get details about a particular action",
-        highlight("type help action", {themes.items: ["action"]}),
-        styles={themes.cmd: ["help"]},
+    info("If you get stuck you can ask for a hint or help.",
+        styles={themes.cmd: ["hint", "help"]},
         after=1,
     )
 
@@ -522,6 +521,13 @@ def do_load(*args):
     do_inventory()
     do_look()
 
+def do_hint(*args):
+    """Give a hint."""
+    hints = get_hints()
+    hint = hints.pop(0)
+    commands = [x["name"] for x in COMMANDS]
+    info(hint, styles={themes.cmd: commands}, before=1)
+
 
 ## ACTIONS #######################################
 
@@ -542,6 +548,7 @@ ACTIONS = {
     "menu": {"name": "menu", "func": do_menu, "place": "market"},
     "stats": {"name": "stats", "func": do_stats},
     "quit": {"name": "quit", "func": do_quit},
+    "hint": {"name": "quit", "func": do_hint},
 }
 
 # alias -> command func

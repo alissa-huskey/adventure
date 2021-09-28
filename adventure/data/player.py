@@ -18,6 +18,13 @@ def all_inventory_actions(data=None):
     if data: INVENTORY_ACTIONS = data
     return INVENTORY_ACTIONS
 
+HINTS = [
+    "You could always take another look around.",
+    "Is there something you could examine more closely?",
+    "Maybe it's time to go.",
+    "Try taking a look at the help.",
+]
+
 DEFAULTS = {
     "pos": None,
     "place": None,
@@ -33,6 +40,7 @@ DEFAULTS = {
     },
     "items": {},
     "places": {},
+    "hints": HINTS[:],
 }
 
 PLAYER, INVENTORY_ACTIONS = deepcopy(DEFAULTS), {}

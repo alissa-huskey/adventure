@@ -9,6 +9,6 @@ by [this post][blog-post] on The Invent with Python Blog.
 
 The source code is on [github](https://github.com/alissa-huskey/adventure).
 
-[![Run on Repl.it](https://repl.it/badge/github/alissa-huskey/adventure)](https://repl.it/github/alissa-huskey/adventure)
+[![Run on Repl.it](https://repl.it/badge/github/alissa-huskey/adventure)](https://repl.it/@alissahuskey/adventure)
 
 

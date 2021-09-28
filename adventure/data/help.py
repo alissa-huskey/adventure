@@ -30,10 +30,12 @@ COMMANDS = [
     {
         "name": "save",
         "description": "save your game",
+        "listed": False,
     },
     {
         "name": "load",
         "description": "load a saved game",
+        "listed": False,
     },
     {
         "name": "inventory",
@@ -99,6 +101,10 @@ COMMANDS = [
                 "place": { "desc": "where to jump to", },
             },
         },
+    },
+    {
+        "name": "hint",
+        "description": "get a hint",
     },
     {
         "name": "intro",
