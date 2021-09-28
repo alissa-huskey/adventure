@@ -177,9 +177,12 @@ def highlight(text, styles):
         if not words:
             continue
 
+        if not hasattr(style, "default"):
+            style.default = ""
+
         text = re.sub(
             rf'\b({"|".join(words)})\b',
-            rf'{style}\1{fg.default}',
+            rf'{style}\1{style.default}',
             text,
             flags=re.IGNORECASE,
         )
@@ -193,7 +196,7 @@ def apply_state(template, state):
     return template.substitute(**state)
 
 def info(*args, before=0, after=0, sep=" ", indent=INDENT, should_merge=False,
-         should_wrap=True, styles={}, **kwargs):
+         should_wrap=True, styles={}, alignment=None, **kwargs):
     message = sep.join(map(str, args))
 
     if styles:
@@ -211,6 +214,11 @@ def info(*args, before=0, after=0, sep=" ", indent=INDENT, should_merge=False,
         )
     else:
         lines = [(" "*indent) + message]
+
+    if alignment:
+        func = {"right": TERM.rjust, "center": TERM.center}[alignment]
+        align = lambda x: func(x.strip(), WIDTH)
+        lines = map(align, lines)
 
     print("\n"*before, end="")
     print(*lines, sep="\n", **kwargs)

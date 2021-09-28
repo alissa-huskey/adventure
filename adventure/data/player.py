@@ -22,6 +22,7 @@ DEFAULTS = {
     "pos": None,
     "place": None,
     "health": 100,
+    "hints": False,
     "inventory": dict(
         gems=0,
     ),

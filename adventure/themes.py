@@ -10,7 +10,8 @@ arg_default = fg.i210
 usage_arg = arg + fx.italic
 items = fg.t_DA70D6             # orchid
 header = fx.bold
-hint = fg.darkgray + fx.italic
+hint = fx.italic
+# hint = fg.darkgray
 
 try:
     normal = _PaletteEntry(fg.white, "NORMAL", *fg.default._codes)

@@ -8,10 +8,9 @@ from console import fx
 
 
 from adventure.data.help import COMMANDS
-from adventure.player import state
 from adventure.places import COMPASS_OPTIONS
 from adventure.inventory import get_inventory
-from adventure.hints import trigger_event, init
+from adventure.hints import trigger_event, init, show_hint
 from adventure.formatting import (
     info,
     error,
@@ -26,12 +25,14 @@ from adventure.player import (
     current_place,
     current_position,
     state,
+    player,
 )
 from adventure.actions import (
     contextual_action,
     do_intro,
     do_jump,
     do_go,
+    do_hint,
     ACTIONS
 )
 from adventure import (
@@ -134,12 +135,18 @@ def catcher():
 
 @contextmanager
 def doer():
-    """Do an action."""
+    """A command wrapper.
+
+       Catches errors, prints an hr, show hint, check for game over.
+    """
     with catcher():
         debug(position=current_position(), place=current_place()["name"])
         yield
 
-    hr(char="~", before=1, after=1)
+    print() # because we don't know if hint will print
+    if player()["hints"]:
+        show_hint(current_place())
+    hr(char="~", after=1)
 
     if not is_alive():
         info("Oh no, you're dead!", after=1)

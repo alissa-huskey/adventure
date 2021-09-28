@@ -29,8 +29,17 @@ COMMANDS = [
         "listed": False,
     },
     {
-        "name": "hint",
-        "description": "get a hint",
+        "name": "hints",
+        "description": "enable or disable hints mode",
+        "examples": ["hints", "hints on"],
+        "arguments": {
+            "optional": {
+                "switch_to": {
+                    "desc": "what to set hints mode to",
+                    "options": ["on", "off"],
+                },
+            },
+        },
     },
     {
         "name": "stats",

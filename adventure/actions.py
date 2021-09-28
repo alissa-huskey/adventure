@@ -285,6 +285,19 @@ def do_tutorial():
     )
 
 
+def do_hints(switch_to=None, *args):
+    """Turn hints on or off."""
+    toggle = ("off", "on", None)
+    validate("hints", switch_to, "switch_to", options=toggle, klass=str)
+
+    if switch_to:
+        current = player().get("hints")
+        player()["hints"] = bool(toggle.index(switch_to))
+
+    current = player().get("hints")
+    info(f"Hints mode is: {toggle[current]}", before=1)
+
+
 def do_intro():
     """Welcome message"""
     trigger_event("do_intro")
@@ -358,6 +371,7 @@ def do_help(command=None, *args):
     if not cmd:
         error(f"No such command: {command!r}")
 
+    trigger_event("help_action")
     titles = ["arguments", "examples", "titles", "usage", "aliases"]
     options = dict(
         align={0: "rjust"},
@@ -578,7 +592,7 @@ ACTIONS = {
     "menu": {"name": "menu", "func": do_menu, "place": "market"},
     "stats": {"name": "stats", "func": do_stats},
     "quit": {"name": "quit", "func": do_quit},
-    "hint": {"name": "quit", "func": do_hint},
+    "hints": {"name": "hints", "func": do_hints},
     "tutorial": {"name": "tutorial", "func": do_tutorial},
 }
 

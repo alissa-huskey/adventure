@@ -1,10 +1,13 @@
 from more_itertools import first, always_iterable
 
+from adventure.formatting import info
+from adventure import themes
+
 HINTS = {}
 EVENTS = {}
 ACTIVE_HINTS = []
 
-def register_hint(name, message, add, remove, place=None, limit=1):
+def register_hint(name, message, add, remove, commands=[], items=[], place=None, limit=1):
     """Add hint and register related events."""
 
     HINTS[name] = {
@@ -13,6 +16,8 @@ def register_hint(name, message, add, remove, place=None, limit=1):
         "seen": 0,
         "place": place,
         "limit": limit,
+        "commands": commands,
+        "items": items,
     }
 
     for event in always_iterable(add):
@@ -31,7 +36,7 @@ def trigger_event(action):
 
     for name in event.get("add", []):
         if not HINTS[name]["seen"]:
-            ACTIVE_HINTS.append(name)
+            ACTIVE_HINTS.insert(0, name)
 
     for name in event.get("remove", []):
         try:
@@ -47,10 +52,27 @@ def active_hints(place):
     return hints
 
 def get_hint(place):
+    """Return the first active hint."""
     hint = first(active_hints(place), {})
-    hint["seen"] += 1
-    trigger_event(f"finished-{hint['name']}")
+    if hint:
+        hint["seen"] += 1
+        trigger_event(f"finished-{hint['name']}")
     return hint
+
+def show_hint(place):
+    """Display a hint."""
+    hint = get_hint(place["name"])
+
+    if hint:
+        info(
+            themes.hint(f'Hint: {hint["hint"]}'),
+            alignment="right",
+            styles={
+                themes.items: hint["items"],
+                themes.cmd: hint["commands"],
+            },
+            indent=0,
+        )
 
 def init():
     register_hint(
@@ -60,6 +82,7 @@ def init():
         remove="do_look",
         place="home",
         limit=None,
+        commands=["look"],
     )
 
     register_hint(
@@ -69,15 +92,17 @@ def init():
         remove="examine_desk",
         place="home",
         limit=None,
+        items=["desk"],
     )
 
     register_hint(
         "examine-book",
-        "I wonder if the book has anything interesting to say",
+        "I wonder what the book has to say.",
         add="examine_desk",
         remove="examine_book",
         place="home",
         limit=None,
+        items=["book"],
     )
 
     register_hint(
@@ -86,6 +111,7 @@ def init():
         add="examine_book",
         remove="do_go",
         place="home",
+        commands=["go"],
     )
 
     register_hint(
@@ -93,6 +119,7 @@ def init():
         "It might be a good time to check your stats.",
         add="do_pet",
         remove="do_stats",
+        commands=["stats"],
     )
 
     register_hint(
@@ -100,14 +127,16 @@ def init():
         "Have you looked at your inventory lately?",
         add="do_buy",
         remove="do_inventory",
+        commands=["inventory"],
     )
 
     register_hint(
         "dragon-sleep",
-        "I bet this dragon won't fall back asleep until you go away.",
+        "I bet he'll stay awake until you go away.",
         place="cave",
         remove="leave_cave",
         add="do_pet",
+        commands=["go"],
     )
 
     register_hint(
@@ -115,14 +144,16 @@ def init():
         "Is there something you could examine more closely?",
         add="finished-look-around",
         remove="do_examine",
+        commands=["examine"],
     )
 
     register_hint(
         "help-command",
-        "You can add the name of an action after help to get detailed help on that command.",
+        "Try help ?",
         add=["do_help"],
-        remove=[],
+        remove=["help_action"],
         limit=None,
+        commands=["help"],
     )
 
     register_hint(
@@ -131,6 +162,7 @@ def init():
         add=["finished-examine-desk"],
         remove="do_help",
         limit=None,
+        commands=["help"],
     )
 
     register_hint(
@@ -138,15 +170,16 @@ def init():
         "I wonder where you could go to spend some gems.",
         add="get_gems",
         remove="enter_market",
-
+        commands=["go"],
     )
 
     register_hint(
         "find-clue",
-        "Wasn't there a book somewhere that said something about sleeping dragons?",
+        "Don't you have a book that mentions dragons?",
         add="enter_cave",
         remove=["examine_book", "do_pet"],
         place="cave",
+        items=["book"],
     )
 
     register_hint(
@@ -154,4 +187,5 @@ def init():
         "You could always take another look around.",
         add="leave_home",
         remove="do_look",
+        commands=["look"],
     )
