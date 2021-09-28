@@ -18,9 +18,28 @@ COMMANDS = [
         },
     },
     {
-        "name": "quit",
-        "description": "leave the game",
-        "aliases": ["q", "exit"],
+        "name": "tutorial",
+        "description": "how-to guide",
+        "aliases": ["*", "howto"],
+    },
+    {
+        "name": "intro",
+        "description": "see the introduction how-to again",
+        "examples": ["intro"],
+        "listed": False,
+    },
+    {
+        "name": "hints",
+        "description": "enable or disable hints mode",
+        "examples": ["hints", "hints on"],
+        "arguments": {
+            "optional": {
+                "switch_to": {
+                    "desc": "what to set hints mode to",
+                    "options": ["on", "off"],
+                },
+            },
+        },
     },
     {
         "name": "stats",
@@ -30,10 +49,12 @@ COMMANDS = [
     {
         "name": "save",
         "description": "save your game",
+        "listed": False,
     },
     {
         "name": "load",
         "description": "load a saved game",
+        "listed": False,
     },
     {
         "name": "inventory",
@@ -101,9 +122,9 @@ COMMANDS = [
         },
     },
     {
-        "name": "intro",
-        "description": "show the introduction",
-        "examples": ["intro"],
+        "name": "quit",
+        "description": "leave the game",
+        "aliases": ["q", "exit"],
     },
 ]
 

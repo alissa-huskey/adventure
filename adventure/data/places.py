@@ -2,6 +2,7 @@ import sys
 
 from adventure.formatting import info, debug
 from adventure.player import set_state
+from adventure.hints import trigger_event
 
 COMPASS = {
     "n": "north",
@@ -176,6 +177,7 @@ def trigger_hook(hook, place):
         return
 
     name = f"{hook}_{place}"
+    trigger_event(name)
 
     try:
         func = getattr(sys.modules[__name__], name)

@@ -22,6 +22,7 @@ DEFAULTS = {
     "pos": None,
     "place": None,
     "health": 100,
+    "hints": False,
     "inventory": dict(
         gems=0,
     ),
@@ -33,6 +34,7 @@ DEFAULTS = {
     },
     "items": {},
     "places": {},
+    #  "hints": HINTS[:],
 }
 
 PLAYER, INVENTORY_ACTIONS = deepcopy(DEFAULTS), {}
