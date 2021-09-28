@@ -1,2 +1,3 @@
 language = "python3"
-run = "game"
+onBoot = "poetry install"
+run = "./bin/game"

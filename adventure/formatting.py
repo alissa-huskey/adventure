@@ -14,7 +14,7 @@ from adventure.player import state
 
 
 TERM = Terminal()
-WIDTH = 60
+WIDTH = 59
 MARGIN = 3
 INDENT = 6
 MAX=WIDTH-(MARGIN+INDENT)
