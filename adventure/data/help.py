@@ -18,9 +18,19 @@ COMMANDS = [
         },
     },
     {
-        "name": "quit",
-        "description": "leave the game",
-        "aliases": ["q", "exit"],
+        "name": "tutorial",
+        "description": "how-to guide",
+        "aliases": ["*", "howto"],
+    },
+    {
+        "name": "intro",
+        "description": "see the introduction how-to again",
+        "examples": ["intro"],
+        "listed": False,
+    },
+    {
+        "name": "hint",
+        "description": "get a hint",
     },
     {
         "name": "stats",
@@ -103,13 +113,9 @@ COMMANDS = [
         },
     },
     {
-        "name": "hint",
-        "description": "get a hint",
-    },
-    {
-        "name": "intro",
-        "description": "show the introduction",
-        "examples": ["intro"],
+        "name": "quit",
+        "description": "leave the game",
+        "aliases": ["q", "exit"],
     },
 ]
 

@@ -1,5 +1,6 @@
 from adventure.items import get_item
 from adventure.data.player import player, all_inventory_actions
+from adventure.hints import trigger_event
 
 def get_all_inventory():
     return player()["inventory"]
@@ -27,6 +28,12 @@ def remove_inventory_action(name):
 def adjust_inventory(name, amount):
     """Add to amount to players inventory name, and update the list of available for
     current inventory if applicable."""
+    if amount > 0:
+        if name == "gems":
+            trigger_event("get_gems")
+        else:
+            trigger_event("get_stuff")
+
     # amount we have now, if any
     current = player()["inventory"].get(name, 0)
 

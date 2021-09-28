@@ -11,6 +11,7 @@ from adventure.data.help import COMMANDS
 from adventure.player import state
 from adventure.places import COMPASS_OPTIONS
 from adventure.inventory import get_inventory
+from adventure.hints import trigger_event, init
 from adventure.formatting import (
     info,
     error,
@@ -146,13 +147,10 @@ def doer():
 
 def main():
 
+    init()
     do_jump("home", should_show=False)
 
     with doer():
-        hr()
-        info(themes.header("Welcome to the adventure!"), before=1)
-        #  info(fx.italic("Explore the lands. Find treasure. Buy cool stuff."))
-
         do_intro()
 
     while True:
@@ -163,6 +161,7 @@ def main():
                 cmd, args = parse(input("> "))
 
             if cmd:
+                trigger_event(cmd.__name__)
                 cmd(*args)
 
 

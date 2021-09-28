@@ -4,7 +4,7 @@ import time
 from more_itertools import first
 
 from adventure.args import require, validate, extra_args
-from adventure.items import COLORS, MOODS, get_item
+from adventure.items import COLORS, MOODS, ITEMS, get_item
 from adventure.help import get_help
 from adventure.player import (
     adjust_health,
@@ -16,8 +16,8 @@ from adventure.player import (
     player,
     get_state,
     set_state,
-    get_hints,
 )
+from adventure.hints import get_hint, active_hints, trigger_event
 from adventure.data.help import COMMANDS
 from adventure.formatting import (
     info,
@@ -224,6 +224,7 @@ def do_examine(name=None, *args):
             before=1,
             sep=""
         )
+    trigger_event(f"examine_{name}")
 
 def do_go(direction=None, steps=1, *args):
     """Move the player to a new position based on the direction they wish to
@@ -241,18 +242,20 @@ def do_go(direction=None, steps=1, *args):
 
     show(current_place())
 
-def do_intro():
-    """Game intro."""
+def do_tutorial():
+    """Tutorial"""
     commands = [x["name"] for x in COMMANDS]
     fmt = lambda text, items=[]: info(text, styles={themes.cmd: commands,
                                                    themes.items: items})
 
-    info("You are an explorer seeking fortune and fun.", after=1, before=1)
-
     info("""
             To interact with the world around you, type what you want to do. Most often
             in the form of a verb, sometimes followed by a noun.
-         """, styles={themes.cmd: ["verb"], themes.items: ["noun"]}, should_merge=True)
+         """,
+         styles={themes.cmd: ["verb"], themes.items: ["noun"]},
+         should_merge=True,
+         before=1,
+    )
 
     info("For example...", after=1)
 
@@ -274,22 +277,41 @@ def do_intro():
          styles={themes.cmd: ["highlighted"]},
     )
 
-    info("If you get stuck you can ask for a hint or help.",
-        styles={themes.cmd: ["hint", "help"]},
+    info(f"""You can get a list of commands by typing help. Or get details about a
+         particular command with help {themes.items('action')}.""",
+        styles={themes.cmd: ["help"]},
+         should_merge=True,
         after=1,
     )
 
-    if current_place().get("name") == "home":
-        info("Your story beings in your very own cottage.", after=1)
 
-        info(
-            themes.hint(
-                f"Hint: Try " + \
-                themes.cmd('look') + \
-                themes.hint("ing around.")
-            ),
-            should_wrap=False,
-        )
+def do_intro():
+    """Welcome message"""
+    trigger_event("do_intro")
+
+    hr(after=1)
+
+    info(themes.header("Welcome to the adventure!"), after=1)
+
+    info("Explore the land and discover great wonders and treasure! Just try not to get dead.", after=1)
+
+    info(
+        themes.hint(
+            f"Hint: For a how-to guide type: " + \
+            themes.cmd('tutorial') + \
+            themes.hint(".")
+        ),
+        should_wrap=False,
+        after=1,
+    )
+
+    info("""
+            You are an explorer seeking fortune and fun.
+            Your story beings in your very own cottage.
+         """,
+         should_merge=True,
+    )
+
 
 def do_inventory(*args):
     """Show inventory"""
@@ -521,12 +543,20 @@ def do_load(*args):
     do_inventory()
     do_look()
 
-def do_hint(*args):
+def do_hint(show_all=False, *args):
     """Give a hint."""
-    hints = get_hints()
-    hint = hints.pop(0)
     commands = [x["name"] for x in COMMANDS]
-    info(hint, styles={themes.cmd: commands}, before=1)
+    items = [x["name"] for x in ITEMS.values()]
+    styles = {themes.items: items, themes.cmd: commands}
+    place = current_place()
+    if show_all == "all":
+        data = [(x["name"], highlight(x["hint"], styles)) for x in active_hints(place["name"])]
+        table = Table(table=data, padding=2)
+        print()
+        print(table.text)
+    else:
+        hint = get_hint(place["name"])
+        info(hint["hint"], styles={themes.items: items, themes.cmd: commands}, before=1)
 
 
 ## ACTIONS #######################################
@@ -549,6 +579,7 @@ ACTIONS = {
     "stats": {"name": "stats", "func": do_stats},
     "quit": {"name": "quit", "func": do_quit},
     "hint": {"name": "quit", "func": do_hint},
+    "tutorial": {"name": "tutorial", "func": do_tutorial},
 }
 
 # alias -> command func
